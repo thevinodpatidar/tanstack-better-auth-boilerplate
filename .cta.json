@@ -1,0 +1,16 @@
+{
+  "projectName": "tanstack-better-auth-boilerplate",
+  "mode": "file-router",
+  "typescript": true,
+  "tailwind": true,
+  "packageManager": "bun",
+  "addOnOptions": {},
+  "git": true,
+  "version": 1,
+  "framework": "react-cra",
+  "chosenAddOns": [
+    "biome",
+    "start",
+    "shadcn"
+  ]
+}
