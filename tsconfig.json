@@ -20,6 +20,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+    "typeRoots": ["./src/env.d.ts"],
     "strictNullChecks": true
   }
 }
