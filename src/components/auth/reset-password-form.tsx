@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { appConfig, MIN_PASSWORD_LENGTH } from "@/constants/config";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 
 const resetPasswordUserSchema = z.object({
   password: z.string().min(MIN_PASSWORD_LENGTH, {

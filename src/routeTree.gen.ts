@@ -9,8 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
+import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as authVerifyOtpRouteImport } from './routes/(auth)/verify-otp'
 import { Route as authVerify2faRouteImport } from './routes/(auth)/verify-2fa'
@@ -21,15 +21,15 @@ import { Route as authResetPasswordRouteImport } from './routes/(auth)/reset-pas
 import { Route as authMagicLinkRouteImport } from './routes/(auth)/magic-link'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as authChooseProviderRouteImport } from './routes/(auth)/choose-provider'
+import { Route as appOnboardingRouteImport } from './routes/(app)/onboarding'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const appRouteRoute = appRouteRouteImport.update({
+  id: '/(app)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -82,6 +82,11 @@ const authChooseProviderRoute = authChooseProviderRouteImport.update({
   path: '/choose-provider',
   getParentRoute: () => authRouteRoute,
 } as any)
+const appOnboardingRoute = appOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -90,7 +95,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/onboarding': typeof OnboardingRoute
+  '/onboarding': typeof appOnboardingRoute
   '/choose-provider': typeof authChooseProviderRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/magic-link': typeof authMagicLinkRoute
@@ -104,7 +109,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/onboarding': typeof OnboardingRoute
+  '/onboarding': typeof appOnboardingRoute
   '/choose-provider': typeof authChooseProviderRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/magic-link': typeof authMagicLinkRoute
@@ -119,8 +124,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/(app)': typeof appRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
-  '/onboarding': typeof OnboardingRoute
+  '/(app)/onboarding': typeof appOnboardingRoute
   '/(auth)/choose-provider': typeof authChooseProviderRoute
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/magic-link': typeof authMagicLinkRoute
@@ -164,8 +170,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/(app)'
     | '/(auth)'
-    | '/onboarding'
+    | '/(app)/onboarding'
     | '/(auth)/choose-provider'
     | '/(auth)/forgot-password'
     | '/(auth)/magic-link'
@@ -180,25 +187,25 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  appRouteRoute: typeof appRouteRouteWithChildren
   authRouteRoute: typeof authRouteRouteWithChildren
-  OnboardingRoute: typeof OnboardingRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(auth)': {
       id: '/(auth)'
       path: ''
       fullPath: ''
       preLoaderRoute: typeof authRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(app)': {
+      id: '/(app)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof appRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -271,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authChooseProviderRouteImport
       parentRoute: typeof authRouteRoute
     }
+    '/(app)/onboarding': {
+      id: '/(app)/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof appOnboardingRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -280,6 +294,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface appRouteRouteChildren {
+  appOnboardingRoute: typeof appOnboardingRoute
+}
+
+const appRouteRouteChildren: appRouteRouteChildren = {
+  appOnboardingRoute: appOnboardingRoute,
+}
+
+const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
+  appRouteRouteChildren,
+)
 
 interface authRouteRouteChildren {
   authChooseProviderRoute: typeof authChooseProviderRoute
@@ -311,8 +337,8 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  appRouteRoute: appRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,
-  OnboardingRoute: OnboardingRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

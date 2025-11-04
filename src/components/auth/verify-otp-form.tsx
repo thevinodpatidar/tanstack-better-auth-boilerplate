@@ -23,7 +23,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { appConfig, MIN_PASSWORD_LENGTH, OTP_LENGTH } from "@/constants/config";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { cn } from "@/lib/utils";
 import type { EmailOtpType } from "./email-otp-form";
 

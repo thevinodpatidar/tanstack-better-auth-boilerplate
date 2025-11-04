@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { appConfig } from "@/constants/config";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { GithubSignInButton } from "./github";
 import { GoogleSignInButton } from "./google";
 

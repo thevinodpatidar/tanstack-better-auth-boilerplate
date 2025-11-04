@@ -52,19 +52,19 @@ function App() {
 
         <div className="grid grid-cols-1 gap-8 text-center sm:grid-cols-3">
           <div className="space-y-2">
-            <h3 className="font-semibold">Modern Stack</h3>
+            <span className="font-semibold">Modern Stack</span>
             <p className="text-muted-foreground text-sm">
               Built with TanStack, React Server Components, and Tailwind CSS
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold">Secure Auth</h3>
+            <span className="font-semibold">Secure Auth</span>
             <p className="text-muted-foreground text-sm">
               Enterprise-grade authentication with Better Auth
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold">Ready to Deploy</h3>
+            <span className="font-semibold">Ready to Deploy</span>
             <p className="text-muted-foreground text-sm">
               Deploy instantly to Vercel with zero configuration
             </p>

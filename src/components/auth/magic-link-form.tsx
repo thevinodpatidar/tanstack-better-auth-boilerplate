@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { appConfig } from "@/constants/config";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 
 const magicLinkUserSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),

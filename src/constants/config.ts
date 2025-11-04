@@ -44,5 +44,3 @@ export const OTP_LENGTH = 6;
 export const HTTP_STATUS_CODES = {
   FORBIDDEN: 403,
 };
-
-export const ONE_DAY_IN_SECONDS = 86_400_000;

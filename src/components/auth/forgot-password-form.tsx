@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { appConfig } from "@/constants/config";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 
 const forgotPasswordUserSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -48,7 +48,10 @@ export function ForgotPasswordForm() {
           toast.success("OTP sent to your email");
           router.navigate({
             to: appConfig.authRoutes.verifyOtp,
-            params: { email: formData.email, type: "forget-password" },
+            search: {
+              email: encodeURIComponent(formData.email),
+              type: "forget-password",
+            },
           });
         }
       } else {

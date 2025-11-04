@@ -1,14 +1,23 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { appConfig } from "@/constants/config";
-import { getSessionFn } from "@/utils/get-session";
+import { authQueryOptions } from "@/lib/auth/queries";
 
 export const Route = createFileRoute("/(auth)")({
   component: RouteComponent,
-  beforeLoad: async () => {
-    const session = await getSessionFn();
-    if (session?.session) {
-      throw redirect({ to: appConfig.authRoutes.onboarding });
+  beforeLoad: async ({ context }) => {
+    const user = await context.queryClient.ensureQueryData({
+      ...authQueryOptions(),
+      revalidateIfStale: true,
+    });
+    if (user) {
+      throw redirect({
+        to: appConfig.authRoutes.onboarding,
+      });
     }
+
+    return {
+      redirectUrl: appConfig.authRoutes.onboarding,
+    };
   },
 });
 

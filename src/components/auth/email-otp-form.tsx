@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { appConfig } from "@/constants/config";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 
 export type EmailOtpType = "sign-in" | "email-verification" | "forget-password";
 
@@ -45,7 +45,10 @@ export function EmailOtpForm({ type }: { type: EmailOtpType }) {
           onSuccess() {
             router.navigate({
               to: appConfig.authRoutes.verifyOtp,
-              params: { email: formData.email, type },
+              search: {
+                email: encodeURIComponent(formData.email),
+                type,
+              },
             });
             toast.success("OTP sent to email");
           },
