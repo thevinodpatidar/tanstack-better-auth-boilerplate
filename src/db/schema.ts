@@ -1,4 +1,3 @@
-import { ONE_DAY_IN_SECONDS } from "@/constants/config";
 import {
   boolean,
   integer,
@@ -6,6 +5,8 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
+
+export const ONE_DAY_IN_SECONDS = 86400000;
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -117,7 +118,9 @@ export const apiKeys = pgTable("api_keys", {
   lastRefillAt: timestamp("last_refill_at"),
   enabled: boolean("enabled").default(true),
   rateLimitEnabled: boolean("rate_limit_enabled").default(true),
-  rateLimitTimeWindow: integer("rate_limit_time_window").default(ONE_DAY_IN_SECONDS),
+  rateLimitTimeWindow: integer("rate_limit_time_window").default(
+    ONE_DAY_IN_SECONDS
+  ),
   rateLimitMax: integer("rate_limit_max").default(10),
   requestCount: integer("request_count"),
   remaining: integer("remaining"),

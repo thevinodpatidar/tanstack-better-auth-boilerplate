@@ -22,7 +22,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { appConfig, OTP_LENGTH } from "@/constants/config";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 
 const verify2FaUserSchema = z.object({
   otp: z.string().min(OTP_LENGTH, { message: "OTP must be 6 digits" }),

@@ -19,7 +19,7 @@ import {
   HTTP_STATUS_CODES,
   MIN_PASSWORD_LENGTH,
 } from "@/constants/config";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 
 const passwordSignupSchema = z.object({
   email: z.email({ message: "Invalid email address" }),
