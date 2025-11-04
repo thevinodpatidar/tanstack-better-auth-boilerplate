@@ -9,38 +9,198 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as authVerifyOtpRouteImport } from './routes/(auth)/verify-otp'
+import { Route as authVerify2faRouteImport } from './routes/(auth)/verify-2fa'
+import { Route as authSignupRouteImport } from './routes/(auth)/signup'
+import { Route as authSigninOtpRouteImport } from './routes/(auth)/signin-otp'
+import { Route as authSigninRouteImport } from './routes/(auth)/signin'
+import { Route as authResetPasswordRouteImport } from './routes/(auth)/reset-password'
+import { Route as authMagicLinkRouteImport } from './routes/(auth)/magic-link'
+import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
+import { Route as authChooseProviderRouteImport } from './routes/(auth)/choose-provider'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const authVerifyOtpRoute = authVerifyOtpRouteImport.update({
+  id: '/verify-otp',
+  path: '/verify-otp',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authVerify2faRoute = authVerify2faRouteImport.update({
+  id: '/verify-2fa',
+  path: '/verify-2fa',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authSignupRoute = authSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authSigninOtpRoute = authSigninOtpRouteImport.update({
+  id: '/signin-otp',
+  path: '/signin-otp',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authSigninRoute = authSigninRouteImport.update({
+  id: '/signin',
+  path: '/signin',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authResetPasswordRoute = authResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authMagicLinkRoute = authMagicLinkRouteImport.update({
+  id: '/magic-link',
+  path: '/magic-link',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authChooseProviderRoute = authChooseProviderRouteImport.update({
+  id: '/choose-provider',
+  path: '/choose-provider',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRoute
+  '/choose-provider': typeof authChooseProviderRoute
+  '/forgot-password': typeof authForgotPasswordRoute
+  '/magic-link': typeof authMagicLinkRoute
+  '/reset-password': typeof authResetPasswordRoute
+  '/signin': typeof authSigninRoute
+  '/signin-otp': typeof authSigninOtpRoute
+  '/signup': typeof authSignupRoute
+  '/verify-2fa': typeof authVerify2faRoute
+  '/verify-otp': typeof authVerifyOtpRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRoute
+  '/choose-provider': typeof authChooseProviderRoute
+  '/forgot-password': typeof authForgotPasswordRoute
+  '/magic-link': typeof authMagicLinkRoute
+  '/reset-password': typeof authResetPasswordRoute
+  '/signin': typeof authSigninRoute
+  '/signin-otp': typeof authSigninOtpRoute
+  '/signup': typeof authSignupRoute
+  '/verify-2fa': typeof authVerify2faRoute
+  '/verify-otp': typeof authVerifyOtpRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/(auth)': typeof authRouteRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
+  '/(auth)/choose-provider': typeof authChooseProviderRoute
+  '/(auth)/forgot-password': typeof authForgotPasswordRoute
+  '/(auth)/magic-link': typeof authMagicLinkRoute
+  '/(auth)/reset-password': typeof authResetPasswordRoute
+  '/(auth)/signin': typeof authSigninRoute
+  '/(auth)/signin-otp': typeof authSigninOtpRoute
+  '/(auth)/signup': typeof authSignupRoute
+  '/(auth)/verify-2fa': typeof authVerify2faRoute
+  '/(auth)/verify-otp': typeof authVerifyOtpRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/onboarding'
+    | '/choose-provider'
+    | '/forgot-password'
+    | '/magic-link'
+    | '/reset-password'
+    | '/signin'
+    | '/signin-otp'
+    | '/signup'
+    | '/verify-2fa'
+    | '/verify-otp'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/onboarding'
+    | '/choose-provider'
+    | '/forgot-password'
+    | '/magic-link'
+    | '/reset-password'
+    | '/signin'
+    | '/signin-otp'
+    | '/signup'
+    | '/verify-2fa'
+    | '/verify-otp'
+    | '/api/auth/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/(auth)'
+    | '/onboarding'
+    | '/(auth)/choose-provider'
+    | '/(auth)/forgot-password'
+    | '/(auth)/magic-link'
+    | '/(auth)/reset-password'
+    | '/(auth)/signin'
+    | '/(auth)/signin-otp'
+    | '/(auth)/signup'
+    | '/(auth)/verify-2fa'
+    | '/(auth)/verify-otp'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  authRouteRoute: typeof authRouteRouteWithChildren
+  OnboardingRoute: typeof OnboardingRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)': {
+      id: '/(auth)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +208,112 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(auth)/verify-otp': {
+      id: '/(auth)/verify-otp'
+      path: '/verify-otp'
+      fullPath: '/verify-otp'
+      preLoaderRoute: typeof authVerifyOtpRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/verify-2fa': {
+      id: '/(auth)/verify-2fa'
+      path: '/verify-2fa'
+      fullPath: '/verify-2fa'
+      preLoaderRoute: typeof authVerify2faRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/signup': {
+      id: '/(auth)/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof authSignupRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/signin-otp': {
+      id: '/(auth)/signin-otp'
+      path: '/signin-otp'
+      fullPath: '/signin-otp'
+      preLoaderRoute: typeof authSigninOtpRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/signin': {
+      id: '/(auth)/signin'
+      path: '/signin'
+      fullPath: '/signin'
+      preLoaderRoute: typeof authSigninRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/reset-password': {
+      id: '/(auth)/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof authResetPasswordRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/magic-link': {
+      id: '/(auth)/magic-link'
+      path: '/magic-link'
+      fullPath: '/magic-link'
+      preLoaderRoute: typeof authMagicLinkRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/forgot-password': {
+      id: '/(auth)/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof authForgotPasswordRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/choose-provider': {
+      id: '/(auth)/choose-provider'
+      path: '/choose-provider'
+      fullPath: '/choose-provider'
+      preLoaderRoute: typeof authChooseProviderRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface authRouteRouteChildren {
+  authChooseProviderRoute: typeof authChooseProviderRoute
+  authForgotPasswordRoute: typeof authForgotPasswordRoute
+  authMagicLinkRoute: typeof authMagicLinkRoute
+  authResetPasswordRoute: typeof authResetPasswordRoute
+  authSigninRoute: typeof authSigninRoute
+  authSigninOtpRoute: typeof authSigninOtpRoute
+  authSignupRoute: typeof authSignupRoute
+  authVerify2faRoute: typeof authVerify2faRoute
+  authVerifyOtpRoute: typeof authVerifyOtpRoute
+}
+
+const authRouteRouteChildren: authRouteRouteChildren = {
+  authChooseProviderRoute: authChooseProviderRoute,
+  authForgotPasswordRoute: authForgotPasswordRoute,
+  authMagicLinkRoute: authMagicLinkRoute,
+  authResetPasswordRoute: authResetPasswordRoute,
+  authSigninRoute: authSigninRoute,
+  authSigninOtpRoute: authSigninOtpRoute,
+  authSignupRoute: authSignupRoute,
+  authVerify2faRoute: authVerify2faRoute,
+  authVerifyOtpRoute: authVerifyOtpRoute,
+}
+
+const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
+  authRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  authRouteRoute: authRouteRouteWithChildren,
+  OnboardingRoute: OnboardingRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
