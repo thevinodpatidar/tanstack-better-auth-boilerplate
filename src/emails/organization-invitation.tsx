@@ -17,7 +17,7 @@ type OrganizationInviteEmailProps = {
   inviteLink: string;
 };
 
-const OrganizationInviteEmail = ({
+export const OrganizationInviteEmail = ({
   organizationName,
   inviteLink,
 }: OrganizationInviteEmailProps) => {
@@ -93,5 +93,3 @@ const OrganizationInviteEmail = ({
     </Html>
   );
 };
-
-export default OrganizationInviteEmail;

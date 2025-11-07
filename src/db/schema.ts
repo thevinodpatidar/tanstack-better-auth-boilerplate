@@ -146,3 +146,15 @@ export const passkeys = pgTable("passkeys", {
   transports: text("transports"),
   createdAt: timestamp("created_at"),
 });
+
+
+export type User = typeof users.$inferSelect;
+export type Session = typeof sessions.$inferSelect;
+export type Account = typeof accounts.$inferSelect;
+export type Verification = typeof verifications.$inferSelect;
+export type TwoFactor = typeof twoFactors.$inferSelect;
+export type Organization = typeof organizations.$inferSelect;
+export type Member = typeof members.$inferSelect;
+export type Invitation = typeof invitations.$inferSelect;
+export type ApiKey = typeof apiKeys.$inferSelect;
+export type Passkey = typeof passkeys.$inferSelect;
