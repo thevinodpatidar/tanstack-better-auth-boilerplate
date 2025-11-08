@@ -28,6 +28,7 @@ const getAuthConfig = createServerOnlyFn(() => {
   return betterAuth({
     appName: "TanStack Start Better Auth Boilerplate",
     baseURL: env.BETTER_AUTH_URL,
+    basePath: "/api/auth",
     secret: env.BETTER_AUTH_SECRET,
     database: drizzleAdapter(db, { provider: "pg", usePlural: true }),
     trustedOrigins: [env.BETTER_AUTH_URL],
