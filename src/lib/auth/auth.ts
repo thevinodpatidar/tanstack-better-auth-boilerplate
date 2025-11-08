@@ -252,6 +252,7 @@ const getAuthConfig = createServerOnlyFn(() => {
             const organizationId = await getUserDefaultOrganizationIdFn({
               data: { userId: session.userId },
             });
+            console.log("organizationId", organizationId);
             return {
               data: {
                 ...session,
