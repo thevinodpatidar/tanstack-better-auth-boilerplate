@@ -3,9 +3,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
 import { Suspense } from "react";
 import { SignOutButton } from "@/components/signout-button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { authQueryOptions } from "@/lib/auth/queries";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/")({ component: App });
 
@@ -16,6 +16,7 @@ function App() {
         <div className="flex flex-col items-center gap-8 sm:flex-row">
           <Image
             alt="TanStack Word logo"
+            className="dark:invert"
             height={38}
             src="/tanstack-black-logo.svg"
             width={180}
