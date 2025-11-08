@@ -1,5 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
+import { Suspense } from "react";
+import { SignOutButton } from "@/components/signout-button";
+import { Button } from "@/components/ui/button";
+import { authQueryOptions } from "@/lib/auth/queries";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/")({ component: App });
 
@@ -33,7 +39,11 @@ function App() {
             minutes.
           </p>
         </div>
+        <Suspense fallback={<div className="py-6">Loading user...</div>}>
+          <UserAction />
+        </Suspense>
 
+        <ThemeToggle />
         {/* <div className="flex flex-col gap-4 items-center">
           <Link
             className="w-full sm:w-auto"
@@ -71,6 +81,34 @@ function App() {
           </div>
         </div>
       </main>
+    </div>
+  );
+}
+
+function UserAction() {
+  const { data: user } = useSuspenseQuery(authQueryOptions());
+
+  return user ? (
+    <div className="flex flex-col items-center gap-2">
+      <p>Welcome back, {user.name}!</p>
+      <Button asChild className="mb-2 w-fit" size="lg" type="button">
+        <Link to="/onboarding">Go to Dashboard</Link>
+      </Button>
+      <div className="text-center text-xs sm:text-sm">
+        Session user:
+        <pre className="max-w-screen overflow-x-auto px-2 text-start">
+          {JSON.stringify(user, null, 2)}
+        </pre>
+      </div>
+
+      <SignOutButton />
+    </div>
+  ) : (
+    <div className="flex flex-col items-center gap-2">
+      <p>You are not signed in.</p>
+      <Button asChild className="w-fit" size="lg" type="button">
+        <Link to="/signin">Log in</Link>
+      </Button>
     </div>
   );
 }

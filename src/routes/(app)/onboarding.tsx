@@ -5,5 +5,7 @@ export const Route = createFileRoute("/(app)/onboarding")({
 });
 
 function RouteComponent() {
-  return <div>Hello "/onboarding"!</div>;
+
+  const { user } = Route.useRouteContext();
+  return <div>Hello {user.name}! Welcome to the onboarding page.</div>;
 }
