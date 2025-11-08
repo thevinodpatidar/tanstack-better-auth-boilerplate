@@ -21,7 +21,6 @@ import { ResetPasswordEmail } from "@/emails/reset-password";
 import { ResetPasswordOtpEmail } from "@/emails/reset-password-otp";
 import { SigninOtpVerificationEmail } from "@/emails/signin-otp-verification";
 import { env } from "@/env/server";
-import { getUserDefaultOrganizationIdFn } from "@/utils/user-default-organization-id";
 import { resend } from "../resend";
 
 const getAuthConfig = createServerOnlyFn(() => {
@@ -245,24 +244,24 @@ const getAuthConfig = createServerOnlyFn(() => {
       }),
       reactStartCookies(),
     ],
-    databaseHooks: {
-      session: {
-        create: {
-          before: async (session) => {
-            const organizationId = await getUserDefaultOrganizationIdFn({
-              data: { userId: session.userId },
-            });
-            console.log("organizationId", organizationId);
-            return {
-              data: {
-                ...session,
-                activeOrganizationId: organizationId,
-              },
-            };
-          },
-        },
-      },
-    },
+    // databaseHooks: {
+    //   session: {
+    //     create: {
+    //       before: async (session) => {
+    //         const organizationId = await getUserDefaultOrganizationIdFn({
+    //           data: { userId: session.userId },
+    //         });
+    //         console.log("organizationId", organizationId);
+    //         return {
+    //           data: {
+    //             ...session,
+    //             activeOrganizationId: organizationId,
+    //           },
+    //         };
+    //       },
+    //     },
+    //   },
+    // },
   });
 });
 
