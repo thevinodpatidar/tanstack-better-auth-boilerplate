@@ -55,6 +55,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <meta
+          content="6mkZ2SwJNo5cwrBePzNFLOjzdSqt8QfTeK18aUSlC6E"
+          name="google-site-verification"
+        />
         <HeadContent />
       </head>
       <body>
