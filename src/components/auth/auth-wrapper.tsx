@@ -1,5 +1,3 @@
-"use client";
-
 import { IconFlowerFilled } from "@tabler/icons-react";
 import { Link, parsePathname, useRouter } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";

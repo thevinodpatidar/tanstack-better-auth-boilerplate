@@ -22,6 +22,7 @@ import { Route as authMagicLinkRouteImport } from './routes/(auth)/magic-link'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as authChooseProviderRouteImport } from './routes/(auth)/choose-provider'
 import { Route as appOnboardingRouteImport } from './routes/(app)/onboarding'
+import { Route as appDashboardRouteRouteImport } from './routes/(app)/dashboard/route'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const authRouteRoute = authRouteRouteImport.update({
@@ -87,6 +88,11 @@ const appOnboardingRoute = appOnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => appRouteRoute,
 } as any)
+const appDashboardRouteRoute = appDashboardRouteRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -95,6 +101,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof appDashboardRouteRoute
   '/onboarding': typeof appOnboardingRoute
   '/choose-provider': typeof authChooseProviderRoute
   '/forgot-password': typeof authForgotPasswordRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof appDashboardRouteRoute
   '/onboarding': typeof appOnboardingRoute
   '/choose-provider': typeof authChooseProviderRoute
   '/forgot-password': typeof authForgotPasswordRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/(app)': typeof appRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
+  '/(app)/dashboard': typeof appDashboardRouteRoute
   '/(app)/onboarding': typeof appOnboardingRoute
   '/(auth)/choose-provider': typeof authChooseProviderRoute
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/dashboard'
     | '/onboarding'
     | '/choose-provider'
     | '/forgot-password'
@@ -156,6 +166,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/dashboard'
     | '/onboarding'
     | '/choose-provider'
     | '/forgot-password'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/'
     | '/(app)'
     | '/(auth)'
+    | '/(app)/dashboard'
     | '/(app)/onboarding'
     | '/(auth)/choose-provider'
     | '/(auth)/forgot-password'
@@ -285,6 +297,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appOnboardingRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/(app)/dashboard': {
+      id: '/(app)/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof appDashboardRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -296,10 +315,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface appRouteRouteChildren {
+  appDashboardRouteRoute: typeof appDashboardRouteRoute
   appOnboardingRoute: typeof appOnboardingRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
+  appDashboardRouteRoute: appDashboardRouteRoute,
   appOnboardingRoute: appOnboardingRoute,
 }
 
