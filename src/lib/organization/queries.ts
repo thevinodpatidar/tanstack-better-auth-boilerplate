@@ -15,25 +15,21 @@ export type CheckUserOrganizationsQueryResult = Awaited<
   ReturnType<typeof $checkUserOrganizations>
 >;
 
-export const checkOrganizationWithIdQueryOptions = (
-  organizationId: string,
-  userId: string
-) =>
+export const checkOrganizationWithIdQueryOptions = (organizationId: string) =>
   queryOptions({
-    queryKey: ["check-organization-with-id", organizationId, userId],
+    queryKey: ["check-organization-with-id", organizationId],
     queryFn: ({ signal }) =>
-      $checkOrganizationWithId({ signal, data: { organizationId, userId } }),
+      $checkOrganizationWithId({ signal, data: { organizationId } }),
   });
 
 export type CheckOrganizationWithIdQueryResult = Awaited<
   ReturnType<typeof $checkOrganizationWithId>
 >;
 
-export const listOrganizationsWithMemberCountQueryOptions = (userId: string) =>
+export const listOrganizationsWithMemberCountQueryOptions = () =>
   queryOptions({
-    queryKey: ["list-organizations-with-member-count", userId],
-    queryFn: ({ signal }) =>
-      $listOrganizationsWithMemberCount({ signal, data: { userId } }),
+    queryKey: ["list-organizations-with-member-count"],
+    queryFn: ({ signal }) => $listOrganizationsWithMemberCount({ signal }),
   });
 
 export type ListOrganizationsWithMemberCountQueryResult = Awaited<

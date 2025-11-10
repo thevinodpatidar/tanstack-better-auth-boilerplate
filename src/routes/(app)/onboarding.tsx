@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { authClient } from "@/lib/auth/auth-client";
 import { checkUserOrganizationsQueryOptions } from "@/lib/organization/queries";
 
 export const Route = createFileRoute("/(app)/onboarding")({
@@ -22,7 +23,7 @@ export const Route = createFileRoute("/(app)/onboarding")({
 
     if (userOrganizations.hasOrganizations) {
       throw redirect({
-        to: "/organizations/$id",
+        to: "/organizations/$id/dashboard",
         params: { id: userOrganizations.organizationId },
       });
     }
@@ -32,6 +33,16 @@ export const Route = createFileRoute("/(app)/onboarding")({
 });
 
 function RouteComponent() {
+
+  const data = Route.useLoaderData();
+  console.log(data);
+  if (data.userOrganizations.hasOrganizations) {
+    authClient.organization.setActive({
+      organizationId: data.userOrganizations.organizationId,
+      organizationSlug: data.userOrganizations.organizationSlug || "",
+    });
+  }
+
   return (
     <div className="flex h-svh w-screen items-center justify-center">
       <Card className="relative w-full max-w-xs sm:max-w-sm">

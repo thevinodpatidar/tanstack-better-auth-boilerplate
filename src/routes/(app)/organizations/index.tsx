@@ -9,7 +9,7 @@ export const Route = createFileRoute("/(app)/organizations/")({
   component: RouteComponent,
   loader: async ({ context }) => {
     const data = await context.queryClient.ensureQueryData({
-      ...listOrganizationsWithMemberCountQueryOptions(context.user.id),
+      ...listOrganizationsWithMemberCountQueryOptions(),
       revalidateIfStale: true,
     });
     return data;

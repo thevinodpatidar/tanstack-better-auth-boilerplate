@@ -53,7 +53,7 @@ export function CreateOrganizationForm() {
           toast.error(error.message || "Error creating organization");
         } else {
           navigate({
-            to: "/organizations/$id",
+            to: "/organizations/$id/dashboard",
             params: { id: organization.id },
           });
           toast.success("Organization created successfully");

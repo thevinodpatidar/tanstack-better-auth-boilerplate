@@ -19,7 +19,7 @@ export function OrganizationCard({
       className="group transition-all duration-200"
       key={organization.id}
       params={{ id: organization.id }}
-      to={"/organizations/$id"}
+      to={"/organizations/$id/dashboard"}
     >
       <Card className="h-full overflow-hidden border border-border/50 transition-all duration-200 group-hover:border-primary/20 group-hover:shadow-md">
         <CardHeader>
