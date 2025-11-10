@@ -25,6 +25,7 @@ import { Route as appOnboardingRouteImport } from './routes/(app)/onboarding'
 import { Route as appDashboardRouteRouteImport } from './routes/(app)/dashboard/route'
 import { Route as appOrganizationsIndexRouteImport } from './routes/(app)/organizations/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as appOrganizationsCreateRouteImport } from './routes/(app)/organizations/create'
 import { Route as appOrganizationsIdRouteImport } from './routes/(app)/organizations/$id'
 
 const authRouteRoute = authRouteRouteImport.update({
@@ -105,6 +106,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const appOrganizationsCreateRoute = appOrganizationsCreateRouteImport.update({
+  id: '/organizations/create',
+  path: '/organizations/create',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appOrganizationsIdRoute = appOrganizationsIdRouteImport.update({
   id: '/organizations/$id',
   path: '/organizations/$id',
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/verify-2fa': typeof authVerify2faRoute
   '/verify-otp': typeof authVerifyOtpRoute
   '/organizations/$id': typeof appOrganizationsIdRoute
+  '/organizations/create': typeof appOrganizationsCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/organizations': typeof appOrganizationsIndexRoute
 }
@@ -142,6 +149,7 @@ export interface FileRoutesByTo {
   '/verify-2fa': typeof authVerify2faRoute
   '/verify-otp': typeof authVerifyOtpRoute
   '/organizations/$id': typeof appOrganizationsIdRoute
+  '/organizations/create': typeof appOrganizationsCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/organizations': typeof appOrganizationsIndexRoute
 }
@@ -162,6 +170,7 @@ export interface FileRoutesById {
   '/(auth)/verify-2fa': typeof authVerify2faRoute
   '/(auth)/verify-otp': typeof authVerifyOtpRoute
   '/(app)/organizations/$id': typeof appOrganizationsIdRoute
+  '/(app)/organizations/create': typeof appOrganizationsCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/(app)/organizations/': typeof appOrganizationsIndexRoute
 }
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/verify-2fa'
     | '/verify-otp'
     | '/organizations/$id'
+    | '/organizations/create'
     | '/api/auth/$'
     | '/organizations'
   fileRoutesByTo: FileRoutesByTo
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/verify-2fa'
     | '/verify-otp'
     | '/organizations/$id'
+    | '/organizations/create'
     | '/api/auth/$'
     | '/organizations'
   id:
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/(auth)/verify-2fa'
     | '/(auth)/verify-otp'
     | '/(app)/organizations/$id'
+    | '/(app)/organizations/create'
     | '/api/auth/$'
     | '/(app)/organizations/'
   fileRoutesById: FileRoutesById
@@ -342,6 +354,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(app)/organizations/create': {
+      id: '/(app)/organizations/create'
+      path: '/organizations/create'
+      fullPath: '/organizations/create'
+      preLoaderRoute: typeof appOrganizationsCreateRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/organizations/$id': {
       id: '/(app)/organizations/$id'
       path: '/organizations/$id'
@@ -356,6 +375,7 @@ interface appRouteRouteChildren {
   appDashboardRouteRoute: typeof appDashboardRouteRoute
   appOnboardingRoute: typeof appOnboardingRoute
   appOrganizationsIdRoute: typeof appOrganizationsIdRoute
+  appOrganizationsCreateRoute: typeof appOrganizationsCreateRoute
   appOrganizationsIndexRoute: typeof appOrganizationsIndexRoute
 }
 
@@ -363,6 +383,7 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appDashboardRouteRoute: appDashboardRouteRoute,
   appOnboardingRoute: appOnboardingRoute,
   appOrganizationsIdRoute: appOrganizationsIdRoute,
+  appOrganizationsCreateRoute: appOrganizationsCreateRoute,
   appOrganizationsIndexRoute: appOrganizationsIndexRoute,
 }
 

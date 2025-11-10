@@ -1,5 +1,9 @@
 import { queryOptions } from "@tanstack/react-query";
-import { $checkOrganizationWithId, $checkUserOrganizations } from "./functions";
+import {
+  $checkOrganizationWithId,
+  $checkUserOrganizations,
+  $listOrganizationsWithMemberCount,
+} from "./functions";
 
 export const checkUserOrganizationsQueryOptions = () =>
   queryOptions({
@@ -23,4 +27,15 @@ export const checkOrganizationWithIdQueryOptions = (
 
 export type CheckOrganizationWithIdQueryResult = Awaited<
   ReturnType<typeof $checkOrganizationWithId>
+>;
+
+export const listOrganizationsWithMemberCountQueryOptions = (userId: string) =>
+  queryOptions({
+    queryKey: ["list-organizations-with-member-count", userId],
+    queryFn: ({ signal }) =>
+      $listOrganizationsWithMemberCount({ signal, data: { userId } }),
+  });
+
+export type ListOrganizationsWithMemberCountQueryResult = Awaited<
+  ReturnType<typeof $listOrganizationsWithMemberCount>
 >;
