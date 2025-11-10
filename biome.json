@@ -36,6 +36,9 @@
       "style": {
         "useNumericSeparators": "off",
         "useFilenamingConvention": "off"
+      },
+      "correctness": {
+        "noChildrenProp": "off"
       }
     }
   },

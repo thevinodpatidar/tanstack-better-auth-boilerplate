@@ -31,6 +31,13 @@ const getAuthConfig = createServerOnlyFn(() => {
     secret: env.BETTER_AUTH_SECRET,
     database: drizzleAdapter(db, { provider: "pg", usePlural: true }),
     trustedOrigins: [env.BETTER_AUTH_URL],
+    onAPIError: {
+      throw: true,
+      onError: (error) => {
+        console.error("auth onAPIError", error);
+      },
+      errorURL: "/signin",
+    },
     session: {
       cookieCache: {
         enabled: true,

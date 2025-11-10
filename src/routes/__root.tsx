@@ -41,6 +41,7 @@ export const Route = createRootRouteWithContext<{
     links: [{ rel: "stylesheet", href: appCss }],
   }),
   component: () => <RootComponent />,
+  wrapInSuspense: true,
 });
 
 function RootComponent() {
