@@ -8,6 +8,8 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
@@ -26,7 +28,13 @@ import { Route as appDashboardRouteRouteImport } from './routes/(app)/dashboard/
 import { Route as appOrganizationsIndexRouteImport } from './routes/(app)/organizations/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as appOrganizationsCreateRouteImport } from './routes/(app)/organizations/create'
-import { Route as appOrganizationsIdRouteImport } from './routes/(app)/organizations/$id'
+import { Route as appOrganizationsPathlessLayoutRouteRouteImport } from './routes/(app)/organizations/_pathlessLayout/route'
+import { Route as appOrganizationsPathlessLayoutIdRouteRouteImport } from './routes/(app)/organizations/_pathlessLayout/$id/route'
+import { Route as appOrganizationsPathlessLayoutIdSettingsRouteImport } from './routes/(app)/organizations/_pathlessLayout/$id/settings'
+import { Route as appOrganizationsPathlessLayoutIdMembersRouteImport } from './routes/(app)/organizations/_pathlessLayout/$id/members'
+import { Route as appOrganizationsPathlessLayoutIdDashboardRouteImport } from './routes/(app)/organizations/_pathlessLayout/$id/dashboard'
+
+const appOrganizationsRouteImport = createFileRoute('/(app)/organizations')()
 
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
@@ -40,6 +48,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const appOrganizationsRoute = appOrganizationsRouteImport.update({
+  id: '/organizations',
+  path: '/organizations',
+  getParentRoute: () => appRouteRoute,
 } as any)
 const authVerifyOtpRoute = authVerifyOtpRouteImport.update({
   id: '/verify-otp',
@@ -97,9 +110,9 @@ const appDashboardRouteRoute = appDashboardRouteRouteImport.update({
   getParentRoute: () => appRouteRoute,
 } as any)
 const appOrganizationsIndexRoute = appOrganizationsIndexRouteImport.update({
-  id: '/organizations/',
-  path: '/organizations/',
-  getParentRoute: () => appRouteRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => appOrganizationsRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -107,15 +120,39 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const appOrganizationsCreateRoute = appOrganizationsCreateRouteImport.update({
-  id: '/organizations/create',
-  path: '/organizations/create',
-  getParentRoute: () => appRouteRoute,
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => appOrganizationsRoute,
 } as any)
-const appOrganizationsIdRoute = appOrganizationsIdRouteImport.update({
-  id: '/organizations/$id',
-  path: '/organizations/$id',
-  getParentRoute: () => appRouteRoute,
-} as any)
+const appOrganizationsPathlessLayoutRouteRoute =
+  appOrganizationsPathlessLayoutRouteRouteImport.update({
+    id: '/_pathlessLayout',
+    getParentRoute: () => appOrganizationsRoute,
+  } as any)
+const appOrganizationsPathlessLayoutIdRouteRoute =
+  appOrganizationsPathlessLayoutIdRouteRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => appOrganizationsPathlessLayoutRouteRoute,
+  } as any)
+const appOrganizationsPathlessLayoutIdSettingsRoute =
+  appOrganizationsPathlessLayoutIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => appOrganizationsPathlessLayoutIdRouteRoute,
+  } as any)
+const appOrganizationsPathlessLayoutIdMembersRoute =
+  appOrganizationsPathlessLayoutIdMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => appOrganizationsPathlessLayoutIdRouteRoute,
+  } as any)
+const appOrganizationsPathlessLayoutIdDashboardRoute =
+  appOrganizationsPathlessLayoutIdDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => appOrganizationsPathlessLayoutIdRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -130,10 +167,14 @@ export interface FileRoutesByFullPath {
   '/signup': typeof authSignupRoute
   '/verify-2fa': typeof authVerify2faRoute
   '/verify-otp': typeof authVerifyOtpRoute
-  '/organizations/$id': typeof appOrganizationsIdRoute
+  '/organizations': typeof appOrganizationsPathlessLayoutRouteRouteWithChildren
   '/organizations/create': typeof appOrganizationsCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/organizations': typeof appOrganizationsIndexRoute
+  '/organizations/': typeof appOrganizationsIndexRoute
+  '/organizations/$id': typeof appOrganizationsPathlessLayoutIdRouteRouteWithChildren
+  '/organizations/$id/dashboard': typeof appOrganizationsPathlessLayoutIdDashboardRoute
+  '/organizations/$id/members': typeof appOrganizationsPathlessLayoutIdMembersRoute
+  '/organizations/$id/settings': typeof appOrganizationsPathlessLayoutIdSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -148,10 +189,13 @@ export interface FileRoutesByTo {
   '/signup': typeof authSignupRoute
   '/verify-2fa': typeof authVerify2faRoute
   '/verify-otp': typeof authVerifyOtpRoute
-  '/organizations/$id': typeof appOrganizationsIdRoute
+  '/organizations': typeof appOrganizationsIndexRoute
   '/organizations/create': typeof appOrganizationsCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/organizations': typeof appOrganizationsIndexRoute
+  '/organizations/$id': typeof appOrganizationsPathlessLayoutIdRouteRouteWithChildren
+  '/organizations/$id/dashboard': typeof appOrganizationsPathlessLayoutIdDashboardRoute
+  '/organizations/$id/members': typeof appOrganizationsPathlessLayoutIdMembersRoute
+  '/organizations/$id/settings': typeof appOrganizationsPathlessLayoutIdSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -169,10 +213,15 @@ export interface FileRoutesById {
   '/(auth)/signup': typeof authSignupRoute
   '/(auth)/verify-2fa': typeof authVerify2faRoute
   '/(auth)/verify-otp': typeof authVerifyOtpRoute
-  '/(app)/organizations/$id': typeof appOrganizationsIdRoute
+  '/(app)/organizations': typeof appOrganizationsRouteWithChildren
+  '/(app)/organizations/_pathlessLayout': typeof appOrganizationsPathlessLayoutRouteRouteWithChildren
   '/(app)/organizations/create': typeof appOrganizationsCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/(app)/organizations/': typeof appOrganizationsIndexRoute
+  '/(app)/organizations/_pathlessLayout/$id': typeof appOrganizationsPathlessLayoutIdRouteRouteWithChildren
+  '/(app)/organizations/_pathlessLayout/$id/dashboard': typeof appOrganizationsPathlessLayoutIdDashboardRoute
+  '/(app)/organizations/_pathlessLayout/$id/members': typeof appOrganizationsPathlessLayoutIdMembersRoute
+  '/(app)/organizations/_pathlessLayout/$id/settings': typeof appOrganizationsPathlessLayoutIdSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -189,10 +238,14 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify-2fa'
     | '/verify-otp'
-    | '/organizations/$id'
+    | '/organizations'
     | '/organizations/create'
     | '/api/auth/$'
-    | '/organizations'
+    | '/organizations/'
+    | '/organizations/$id'
+    | '/organizations/$id/dashboard'
+    | '/organizations/$id/members'
+    | '/organizations/$id/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -207,10 +260,13 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify-2fa'
     | '/verify-otp'
-    | '/organizations/$id'
+    | '/organizations'
     | '/organizations/create'
     | '/api/auth/$'
-    | '/organizations'
+    | '/organizations/$id'
+    | '/organizations/$id/dashboard'
+    | '/organizations/$id/members'
+    | '/organizations/$id/settings'
   id:
     | '__root__'
     | '/'
@@ -227,10 +283,15 @@ export interface FileRouteTypes {
     | '/(auth)/signup'
     | '/(auth)/verify-2fa'
     | '/(auth)/verify-otp'
-    | '/(app)/organizations/$id'
+    | '/(app)/organizations'
+    | '/(app)/organizations/_pathlessLayout'
     | '/(app)/organizations/create'
     | '/api/auth/$'
     | '/(app)/organizations/'
+    | '/(app)/organizations/_pathlessLayout/$id'
+    | '/(app)/organizations/_pathlessLayout/$id/dashboard'
+    | '/(app)/organizations/_pathlessLayout/$id/members'
+    | '/(app)/organizations/_pathlessLayout/$id/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -262,6 +323,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/(app)/organizations': {
+      id: '/(app)/organizations'
+      path: '/organizations'
+      fullPath: '/organizations'
+      preLoaderRoute: typeof appOrganizationsRouteImport
+      parentRoute: typeof appRouteRoute
     }
     '/(auth)/verify-otp': {
       id: '/(auth)/verify-otp'
@@ -342,10 +410,10 @@ declare module '@tanstack/react-router' {
     }
     '/(app)/organizations/': {
       id: '/(app)/organizations/'
-      path: '/organizations'
-      fullPath: '/organizations'
+      path: '/'
+      fullPath: '/organizations/'
       preLoaderRoute: typeof appOrganizationsIndexRouteImport
-      parentRoute: typeof appRouteRoute
+      parentRoute: typeof appOrganizationsRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -356,35 +424,111 @@ declare module '@tanstack/react-router' {
     }
     '/(app)/organizations/create': {
       id: '/(app)/organizations/create'
-      path: '/organizations/create'
+      path: '/create'
       fullPath: '/organizations/create'
       preLoaderRoute: typeof appOrganizationsCreateRouteImport
-      parentRoute: typeof appRouteRoute
+      parentRoute: typeof appOrganizationsRoute
     }
-    '/(app)/organizations/$id': {
-      id: '/(app)/organizations/$id'
-      path: '/organizations/$id'
+    '/(app)/organizations/_pathlessLayout': {
+      id: '/(app)/organizations/_pathlessLayout'
+      path: '/organizations'
+      fullPath: '/organizations'
+      preLoaderRoute: typeof appOrganizationsPathlessLayoutRouteRouteImport
+      parentRoute: typeof appOrganizationsRoute
+    }
+    '/(app)/organizations/_pathlessLayout/$id': {
+      id: '/(app)/organizations/_pathlessLayout/$id'
+      path: '/$id'
       fullPath: '/organizations/$id'
-      preLoaderRoute: typeof appOrganizationsIdRouteImport
-      parentRoute: typeof appRouteRoute
+      preLoaderRoute: typeof appOrganizationsPathlessLayoutIdRouteRouteImport
+      parentRoute: typeof appOrganizationsPathlessLayoutRouteRoute
+    }
+    '/(app)/organizations/_pathlessLayout/$id/settings': {
+      id: '/(app)/organizations/_pathlessLayout/$id/settings'
+      path: '/settings'
+      fullPath: '/organizations/$id/settings'
+      preLoaderRoute: typeof appOrganizationsPathlessLayoutIdSettingsRouteImport
+      parentRoute: typeof appOrganizationsPathlessLayoutIdRouteRoute
+    }
+    '/(app)/organizations/_pathlessLayout/$id/members': {
+      id: '/(app)/organizations/_pathlessLayout/$id/members'
+      path: '/members'
+      fullPath: '/organizations/$id/members'
+      preLoaderRoute: typeof appOrganizationsPathlessLayoutIdMembersRouteImport
+      parentRoute: typeof appOrganizationsPathlessLayoutIdRouteRoute
+    }
+    '/(app)/organizations/_pathlessLayout/$id/dashboard': {
+      id: '/(app)/organizations/_pathlessLayout/$id/dashboard'
+      path: '/dashboard'
+      fullPath: '/organizations/$id/dashboard'
+      preLoaderRoute: typeof appOrganizationsPathlessLayoutIdDashboardRouteImport
+      parentRoute: typeof appOrganizationsPathlessLayoutIdRouteRoute
     }
   }
 }
 
+interface appOrganizationsPathlessLayoutIdRouteRouteChildren {
+  appOrganizationsPathlessLayoutIdDashboardRoute: typeof appOrganizationsPathlessLayoutIdDashboardRoute
+  appOrganizationsPathlessLayoutIdMembersRoute: typeof appOrganizationsPathlessLayoutIdMembersRoute
+  appOrganizationsPathlessLayoutIdSettingsRoute: typeof appOrganizationsPathlessLayoutIdSettingsRoute
+}
+
+const appOrganizationsPathlessLayoutIdRouteRouteChildren: appOrganizationsPathlessLayoutIdRouteRouteChildren =
+  {
+    appOrganizationsPathlessLayoutIdDashboardRoute:
+      appOrganizationsPathlessLayoutIdDashboardRoute,
+    appOrganizationsPathlessLayoutIdMembersRoute:
+      appOrganizationsPathlessLayoutIdMembersRoute,
+    appOrganizationsPathlessLayoutIdSettingsRoute:
+      appOrganizationsPathlessLayoutIdSettingsRoute,
+  }
+
+const appOrganizationsPathlessLayoutIdRouteRouteWithChildren =
+  appOrganizationsPathlessLayoutIdRouteRoute._addFileChildren(
+    appOrganizationsPathlessLayoutIdRouteRouteChildren,
+  )
+
+interface appOrganizationsPathlessLayoutRouteRouteChildren {
+  appOrganizationsPathlessLayoutIdRouteRoute: typeof appOrganizationsPathlessLayoutIdRouteRouteWithChildren
+}
+
+const appOrganizationsPathlessLayoutRouteRouteChildren: appOrganizationsPathlessLayoutRouteRouteChildren =
+  {
+    appOrganizationsPathlessLayoutIdRouteRoute:
+      appOrganizationsPathlessLayoutIdRouteRouteWithChildren,
+  }
+
+const appOrganizationsPathlessLayoutRouteRouteWithChildren =
+  appOrganizationsPathlessLayoutRouteRoute._addFileChildren(
+    appOrganizationsPathlessLayoutRouteRouteChildren,
+  )
+
+interface appOrganizationsRouteChildren {
+  appOrganizationsPathlessLayoutRouteRoute: typeof appOrganizationsPathlessLayoutRouteRouteWithChildren
+  appOrganizationsCreateRoute: typeof appOrganizationsCreateRoute
+  appOrganizationsIndexRoute: typeof appOrganizationsIndexRoute
+}
+
+const appOrganizationsRouteChildren: appOrganizationsRouteChildren = {
+  appOrganizationsPathlessLayoutRouteRoute:
+    appOrganizationsPathlessLayoutRouteRouteWithChildren,
+  appOrganizationsCreateRoute: appOrganizationsCreateRoute,
+  appOrganizationsIndexRoute: appOrganizationsIndexRoute,
+}
+
+const appOrganizationsRouteWithChildren =
+  appOrganizationsRoute._addFileChildren(appOrganizationsRouteChildren)
+
 interface appRouteRouteChildren {
   appDashboardRouteRoute: typeof appDashboardRouteRoute
   appOnboardingRoute: typeof appOnboardingRoute
-  appOrganizationsIdRoute: typeof appOrganizationsIdRoute
-  appOrganizationsCreateRoute: typeof appOrganizationsCreateRoute
-  appOrganizationsIndexRoute: typeof appOrganizationsIndexRoute
+  appOrganizationsRoute: typeof appOrganizationsRouteWithChildren
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
   appDashboardRouteRoute: appDashboardRouteRoute,
   appOnboardingRoute: appOnboardingRoute,
-  appOrganizationsIdRoute: appOrganizationsIdRoute,
-  appOrganizationsCreateRoute: appOrganizationsCreateRoute,
-  appOrganizationsIndexRoute: appOrganizationsIndexRoute,
+  appOrganizationsRoute: appOrganizationsRouteWithChildren,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
