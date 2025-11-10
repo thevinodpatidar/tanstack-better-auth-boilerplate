@@ -1,6 +1,6 @@
 import { IconCheck, IconFlowerFilled } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { generateId } from "better-auth";
 import { toast } from "sonner";
 import z from "zod/v3";
@@ -49,20 +49,25 @@ export const Route = createFileRoute("/(app)/onboarding")({
   component: RouteComponent,
   pendingComponent: OnboardingSkeleton,
   loader: async ({ context }) => {
-    const hasUserOrganizations = await context.queryClient.ensureQueryData({
+    const userOrganizations = await context.queryClient.ensureQueryData({
       ...checkUserOrganizationsQueryOptions(),
       revalidateIfStale: true,
     });
 
-    if (hasUserOrganizations) {
-      throw redirect({ to: "/dashboard" });
+    if (userOrganizations.hasOrganizations) {
+      throw redirect({
+        to: "/organizations/$id",
+        params: { id: userOrganizations.organizationId },
+      });
     }
 
-    return { hasUserOrganizations };
+    return { userOrganizations };
   },
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+
   const form = useForm({
     defaultValues: { name: "", slug: "" },
     validators: {
@@ -75,6 +80,8 @@ function RouteComponent() {
         if (error) {
           toast.error(error.message || "Error creating organization");
         } else {
+          console.log("redirecting to dashboard");
+          navigate({ to: "/dashboard" });
           toast.success("Organization created successfully");
         }
       } catch {
@@ -158,7 +165,6 @@ function RouteComponent() {
               />
               <form.Field
                 children={(field) => {
-                  console.log(field.state);
                   const isInvalid =
                     (field.state.meta.isTouched && !field.state.meta.isValid) ||
                     !field.state.meta.isValid;
