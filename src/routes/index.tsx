@@ -96,10 +96,11 @@ function UserAction() {
         <Link to="/onboarding">Go to Dashboard</Link>
       </Button>
       <div className="text-center text-xs sm:text-sm">
-        Session user:
-        <pre className="max-w-screen overflow-x-auto px-2 text-start">
-          {JSON.stringify(user, null, 2)}
-        </pre>
+        <ul>
+          <li>User ID: {user.id}</li>
+          <li>User Email: {user.email}</li>
+          <li>User Name: {user.name}</li>
+        </ul>
       </div>
 
       <SignOutButton />

@@ -21,7 +21,7 @@ export function SignOutButton() {
           },
         });
       }}
-      size="lg"
+      size="sm"
       type="button"
       variant="destructive"
     >

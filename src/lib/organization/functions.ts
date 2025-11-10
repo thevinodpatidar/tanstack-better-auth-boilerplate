@@ -48,3 +48,31 @@ export const $checkOrganizationWithId = createServerFn({
 
     return !!validOrganization;
   });
+
+
+  export const $listOrganizationsWithMemberCount = createServerFn({
+    method: "GET",
+  })
+    .inputValidator(z.object({ userId: z.string() }))
+    .handler(async ({ data: { userId } }) => {
+      const organizations = await auth.api.listOrganizations({
+        query: { userId, member: true },
+        headers: getRequest().headers,
+      });
+
+      const memberCounts = await Promise.all(
+        organizations.map(async (org) => {
+          const result = await auth.api.listMembers({
+            query: { organizationId: org.id },
+            headers: getRequest().headers,
+          });
+          return { orgId: org.id, count: result.total || 0 };
+        })
+      );
+
+      const memberCountMap = new Map(
+        memberCounts.map((item) => [item.orgId, item.count])
+      );
+
+      return { organizations, memberCountMap };
+    });
