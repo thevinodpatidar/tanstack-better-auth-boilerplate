@@ -1,5 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
+import { and, eq } from "drizzle-orm";
+import z from "zod/v3";
+import { db } from "@/db";
+import { members } from "@/db/schema";
 import { auth } from "@/lib/auth/auth";
 
 export const $checkUserOrganizations = createServerFn({
@@ -18,8 +22,29 @@ export const $checkUserOrganizations = createServerFn({
       },
     });
 
-    return true;
+    return {
+      organizationId: organizationsData[0].id,
+      hasOrganizations: true,
+    };
   }
 
-  return false;
+  return {
+    hasOrganizations: false,
+    organizationId: null,
+  };
 });
+
+export const $checkOrganizationWithId = createServerFn({
+  method: "GET",
+})
+  .inputValidator(z.object({ organizationId: z.string(), userId: z.string() }))
+  .handler(async ({ data: { organizationId, userId } }) => {
+    const validOrganization = await db.query.members.findFirst({
+      where: and(
+        eq(members.organizationId, organizationId),
+        eq(members.userId, userId)
+      ),
+    });
+
+    return !!validOrganization;
+  });

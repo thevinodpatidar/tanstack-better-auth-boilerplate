@@ -23,7 +23,9 @@ import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-p
 import { Route as authChooseProviderRouteImport } from './routes/(auth)/choose-provider'
 import { Route as appOnboardingRouteImport } from './routes/(app)/onboarding'
 import { Route as appDashboardRouteRouteImport } from './routes/(app)/dashboard/route'
+import { Route as appOrganizationsIndexRouteImport } from './routes/(app)/organizations/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as appOrganizationsIdRouteImport } from './routes/(app)/organizations/$id'
 
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
@@ -93,10 +95,20 @@ const appDashboardRouteRoute = appDashboardRouteRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => appRouteRoute,
 } as any)
+const appOrganizationsIndexRoute = appOrganizationsIndexRouteImport.update({
+  id: '/organizations/',
+  path: '/organizations/',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const appOrganizationsIdRoute = appOrganizationsIdRouteImport.update({
+  id: '/organizations/$id',
+  path: '/organizations/$id',
+  getParentRoute: () => appRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -112,7 +124,9 @@ export interface FileRoutesByFullPath {
   '/signup': typeof authSignupRoute
   '/verify-2fa': typeof authVerify2faRoute
   '/verify-otp': typeof authVerifyOtpRoute
+  '/organizations/$id': typeof appOrganizationsIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/organizations': typeof appOrganizationsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -127,7 +141,9 @@ export interface FileRoutesByTo {
   '/signup': typeof authSignupRoute
   '/verify-2fa': typeof authVerify2faRoute
   '/verify-otp': typeof authVerifyOtpRoute
+  '/organizations/$id': typeof appOrganizationsIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/organizations': typeof appOrganizationsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -145,7 +161,9 @@ export interface FileRoutesById {
   '/(auth)/signup': typeof authSignupRoute
   '/(auth)/verify-2fa': typeof authVerify2faRoute
   '/(auth)/verify-otp': typeof authVerifyOtpRoute
+  '/(app)/organizations/$id': typeof appOrganizationsIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/(app)/organizations/': typeof appOrganizationsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -162,7 +180,9 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify-2fa'
     | '/verify-otp'
+    | '/organizations/$id'
     | '/api/auth/$'
+    | '/organizations'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -177,7 +197,9 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify-2fa'
     | '/verify-otp'
+    | '/organizations/$id'
     | '/api/auth/$'
+    | '/organizations'
   id:
     | '__root__'
     | '/'
@@ -194,7 +216,9 @@ export interface FileRouteTypes {
     | '/(auth)/signup'
     | '/(auth)/verify-2fa'
     | '/(auth)/verify-otp'
+    | '/(app)/organizations/$id'
     | '/api/auth/$'
+    | '/(app)/organizations/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -304,6 +328,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appDashboardRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/(app)/organizations/': {
+      id: '/(app)/organizations/'
+      path: '/organizations'
+      fullPath: '/organizations'
+      preLoaderRoute: typeof appOrganizationsIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -311,17 +342,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(app)/organizations/$id': {
+      id: '/(app)/organizations/$id'
+      path: '/organizations/$id'
+      fullPath: '/organizations/$id'
+      preLoaderRoute: typeof appOrganizationsIdRouteImport
+      parentRoute: typeof appRouteRoute
+    }
   }
 }
 
 interface appRouteRouteChildren {
   appDashboardRouteRoute: typeof appDashboardRouteRoute
   appOnboardingRoute: typeof appOnboardingRoute
+  appOrganizationsIdRoute: typeof appOrganizationsIdRoute
+  appOrganizationsIndexRoute: typeof appOrganizationsIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
   appDashboardRouteRoute: appDashboardRouteRoute,
   appOnboardingRoute: appOnboardingRoute,
+  appOrganizationsIdRoute: appOrganizationsIdRoute,
+  appOrganizationsIndexRoute: appOrganizationsIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
