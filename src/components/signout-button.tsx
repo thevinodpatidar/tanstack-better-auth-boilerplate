@@ -3,13 +3,14 @@ import { useRouter } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/auth-client";
 import { authQueryOptions } from "@/lib/auth/queries";
+import { cn } from "@/lib/utils";
 
-export function SignOutButton() {
+export function SignOutButton({ className }: { className?: string }) {
   const queryClient = useQueryClient();
   const router = useRouter();
   return (
     <Button
-      className="w-fit"
+      className={cn("w-fit", className)}
       onClick={async () => {
         await authClient.signOut({
           fetchOptions: {

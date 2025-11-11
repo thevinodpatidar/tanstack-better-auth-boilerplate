@@ -14,10 +14,6 @@ export const Route = createFileRoute("/(auth)")({
         to: appConfig.authRoutes.onboarding,
       });
     }
-
-    return {
-      redirectUrl: appConfig.authRoutes.onboarding,
-    };
   },
 });
 

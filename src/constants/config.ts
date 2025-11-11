@@ -8,7 +8,6 @@ type AppConfig = {
     onboarding: string;
     resetPassword: string;
     magicLink: string;
-    chooseProvider: string;
     forgotPassword: string;
     verify2fa: string;
   };
@@ -29,7 +28,6 @@ export const appConfig: AppConfig = {
     forgotPassword: "/forgot-password",
     resetPassword: "/reset-password",
     magicLink: "/magic-link",
-    chooseProvider: "/choose-provider",
     verify2fa: "/verify-2fa",
   },
   appRoutes: {

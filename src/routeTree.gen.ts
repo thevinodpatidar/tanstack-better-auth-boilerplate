@@ -22,17 +22,24 @@ import { Route as authSigninRouteImport } from './routes/(auth)/signin'
 import { Route as authResetPasswordRouteImport } from './routes/(auth)/reset-password'
 import { Route as authMagicLinkRouteImport } from './routes/(auth)/magic-link'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
-import { Route as authChooseProviderRouteImport } from './routes/(auth)/choose-provider'
 import { Route as appOnboardingRouteImport } from './routes/(app)/onboarding'
 import { Route as appOrganizationsIndexRouteImport } from './routes/(app)/organizations/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as appOrganizationsCreateRouteImport } from './routes/(app)/organizations/create'
+import { Route as appProfilePathlessLayoutRouteRouteImport } from './routes/(app)/profile/_pathlessLayout/route'
 import { Route as appOrganizationsPathlessLayoutRouteRouteImport } from './routes/(app)/organizations/_pathlessLayout/route'
+import { Route as appProfilePathlessLayoutSecurityRouteImport } from './routes/(app)/profile/_pathlessLayout/security'
+import { Route as appProfilePathlessLayoutProvidersRouteImport } from './routes/(app)/profile/_pathlessLayout/providers'
+import { Route as appProfilePathlessLayoutPersonalDetailsRouteImport } from './routes/(app)/profile/_pathlessLayout/personal-details'
+import { Route as appProfilePathlessLayoutDangerZoneRouteImport } from './routes/(app)/profile/_pathlessLayout/danger-zone'
+import { Route as appProfilePathlessLayoutApiKeysRouteImport } from './routes/(app)/profile/_pathlessLayout/api-keys'
+import { Route as appProfilePathlessLayoutActiveSessionsRouteImport } from './routes/(app)/profile/_pathlessLayout/active-sessions'
 import { Route as appOrganizationsPathlessLayoutIdRouteRouteImport } from './routes/(app)/organizations/_pathlessLayout/$id/route'
 import { Route as appOrganizationsPathlessLayoutIdDashboardRouteImport } from './routes/(app)/organizations/_pathlessLayout/$id/dashboard'
 import { Route as appOrganizationsPathlessLayoutIdSettingsIndexRouteImport } from './routes/(app)/organizations/_pathlessLayout/$id/settings/index'
 import { Route as appOrganizationsPathlessLayoutIdMembersIndexRouteImport } from './routes/(app)/organizations/_pathlessLayout/$id/members/index'
 
+const appProfileRouteImport = createFileRoute('/(app)/profile')()
 const appOrganizationsRouteImport = createFileRoute('/(app)/organizations')()
 
 const authRouteRoute = authRouteRouteImport.update({
@@ -47,6 +54,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const appProfileRoute = appProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => appRouteRoute,
 } as any)
 const appOrganizationsRoute = appOrganizationsRouteImport.update({
   id: '/organizations',
@@ -93,11 +105,6 @@ const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => authRouteRoute,
 } as any)
-const authChooseProviderRoute = authChooseProviderRouteImport.update({
-  id: '/choose-provider',
-  path: '/choose-provider',
-  getParentRoute: () => authRouteRoute,
-} as any)
 const appOnboardingRoute = appOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -118,10 +125,51 @@ const appOrganizationsCreateRoute = appOrganizationsCreateRouteImport.update({
   path: '/create',
   getParentRoute: () => appOrganizationsRoute,
 } as any)
+const appProfilePathlessLayoutRouteRoute =
+  appProfilePathlessLayoutRouteRouteImport.update({
+    id: '/_pathlessLayout',
+    getParentRoute: () => appProfileRoute,
+  } as any)
 const appOrganizationsPathlessLayoutRouteRoute =
   appOrganizationsPathlessLayoutRouteRouteImport.update({
     id: '/_pathlessLayout',
     getParentRoute: () => appOrganizationsRoute,
+  } as any)
+const appProfilePathlessLayoutSecurityRoute =
+  appProfilePathlessLayoutSecurityRouteImport.update({
+    id: '/security',
+    path: '/security',
+    getParentRoute: () => appProfilePathlessLayoutRouteRoute,
+  } as any)
+const appProfilePathlessLayoutProvidersRoute =
+  appProfilePathlessLayoutProvidersRouteImport.update({
+    id: '/providers',
+    path: '/providers',
+    getParentRoute: () => appProfilePathlessLayoutRouteRoute,
+  } as any)
+const appProfilePathlessLayoutPersonalDetailsRoute =
+  appProfilePathlessLayoutPersonalDetailsRouteImport.update({
+    id: '/personal-details',
+    path: '/personal-details',
+    getParentRoute: () => appProfilePathlessLayoutRouteRoute,
+  } as any)
+const appProfilePathlessLayoutDangerZoneRoute =
+  appProfilePathlessLayoutDangerZoneRouteImport.update({
+    id: '/danger-zone',
+    path: '/danger-zone',
+    getParentRoute: () => appProfilePathlessLayoutRouteRoute,
+  } as any)
+const appProfilePathlessLayoutApiKeysRoute =
+  appProfilePathlessLayoutApiKeysRouteImport.update({
+    id: '/api-keys',
+    path: '/api-keys',
+    getParentRoute: () => appProfilePathlessLayoutRouteRoute,
+  } as any)
+const appProfilePathlessLayoutActiveSessionsRoute =
+  appProfilePathlessLayoutActiveSessionsRouteImport.update({
+    id: '/active-sessions',
+    path: '/active-sessions',
+    getParentRoute: () => appProfilePathlessLayoutRouteRoute,
   } as any)
 const appOrganizationsPathlessLayoutIdRouteRoute =
   appOrganizationsPathlessLayoutIdRouteRouteImport.update({
@@ -151,7 +199,6 @@ const appOrganizationsPathlessLayoutIdMembersIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof appOnboardingRoute
-  '/choose-provider': typeof authChooseProviderRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/magic-link': typeof authMagicLinkRoute
   '/reset-password': typeof authResetPasswordRoute
@@ -161,10 +208,17 @@ export interface FileRoutesByFullPath {
   '/verify-2fa': typeof authVerify2faRoute
   '/verify-otp': typeof authVerifyOtpRoute
   '/organizations': typeof appOrganizationsPathlessLayoutRouteRouteWithChildren
+  '/profile': typeof appProfilePathlessLayoutRouteRouteWithChildren
   '/organizations/create': typeof appOrganizationsCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/organizations/': typeof appOrganizationsIndexRoute
   '/organizations/$id': typeof appOrganizationsPathlessLayoutIdRouteRouteWithChildren
+  '/profile/active-sessions': typeof appProfilePathlessLayoutActiveSessionsRoute
+  '/profile/api-keys': typeof appProfilePathlessLayoutApiKeysRoute
+  '/profile/danger-zone': typeof appProfilePathlessLayoutDangerZoneRoute
+  '/profile/personal-details': typeof appProfilePathlessLayoutPersonalDetailsRoute
+  '/profile/providers': typeof appProfilePathlessLayoutProvidersRoute
+  '/profile/security': typeof appProfilePathlessLayoutSecurityRoute
   '/organizations/$id/dashboard': typeof appOrganizationsPathlessLayoutIdDashboardRoute
   '/organizations/$id/members': typeof appOrganizationsPathlessLayoutIdMembersIndexRoute
   '/organizations/$id/settings': typeof appOrganizationsPathlessLayoutIdSettingsIndexRoute
@@ -172,7 +226,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof appOnboardingRoute
-  '/choose-provider': typeof authChooseProviderRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/magic-link': typeof authMagicLinkRoute
   '/reset-password': typeof authResetPasswordRoute
@@ -182,9 +235,16 @@ export interface FileRoutesByTo {
   '/verify-2fa': typeof authVerify2faRoute
   '/verify-otp': typeof authVerifyOtpRoute
   '/organizations': typeof appOrganizationsIndexRoute
+  '/profile': typeof appProfilePathlessLayoutRouteRouteWithChildren
   '/organizations/create': typeof appOrganizationsCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/organizations/$id': typeof appOrganizationsPathlessLayoutIdRouteRouteWithChildren
+  '/profile/active-sessions': typeof appProfilePathlessLayoutActiveSessionsRoute
+  '/profile/api-keys': typeof appProfilePathlessLayoutApiKeysRoute
+  '/profile/danger-zone': typeof appProfilePathlessLayoutDangerZoneRoute
+  '/profile/personal-details': typeof appProfilePathlessLayoutPersonalDetailsRoute
+  '/profile/providers': typeof appProfilePathlessLayoutProvidersRoute
+  '/profile/security': typeof appProfilePathlessLayoutSecurityRoute
   '/organizations/$id/dashboard': typeof appOrganizationsPathlessLayoutIdDashboardRoute
   '/organizations/$id/members': typeof appOrganizationsPathlessLayoutIdMembersIndexRoute
   '/organizations/$id/settings': typeof appOrganizationsPathlessLayoutIdSettingsIndexRoute
@@ -195,7 +255,6 @@ export interface FileRoutesById {
   '/(app)': typeof appRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
   '/(app)/onboarding': typeof appOnboardingRoute
-  '/(auth)/choose-provider': typeof authChooseProviderRoute
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/magic-link': typeof authMagicLinkRoute
   '/(auth)/reset-password': typeof authResetPasswordRoute
@@ -206,10 +265,18 @@ export interface FileRoutesById {
   '/(auth)/verify-otp': typeof authVerifyOtpRoute
   '/(app)/organizations': typeof appOrganizationsRouteWithChildren
   '/(app)/organizations/_pathlessLayout': typeof appOrganizationsPathlessLayoutRouteRouteWithChildren
+  '/(app)/profile': typeof appProfileRouteWithChildren
+  '/(app)/profile/_pathlessLayout': typeof appProfilePathlessLayoutRouteRouteWithChildren
   '/(app)/organizations/create': typeof appOrganizationsCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/(app)/organizations/': typeof appOrganizationsIndexRoute
   '/(app)/organizations/_pathlessLayout/$id': typeof appOrganizationsPathlessLayoutIdRouteRouteWithChildren
+  '/(app)/profile/_pathlessLayout/active-sessions': typeof appProfilePathlessLayoutActiveSessionsRoute
+  '/(app)/profile/_pathlessLayout/api-keys': typeof appProfilePathlessLayoutApiKeysRoute
+  '/(app)/profile/_pathlessLayout/danger-zone': typeof appProfilePathlessLayoutDangerZoneRoute
+  '/(app)/profile/_pathlessLayout/personal-details': typeof appProfilePathlessLayoutPersonalDetailsRoute
+  '/(app)/profile/_pathlessLayout/providers': typeof appProfilePathlessLayoutProvidersRoute
+  '/(app)/profile/_pathlessLayout/security': typeof appProfilePathlessLayoutSecurityRoute
   '/(app)/organizations/_pathlessLayout/$id/dashboard': typeof appOrganizationsPathlessLayoutIdDashboardRoute
   '/(app)/organizations/_pathlessLayout/$id/members/': typeof appOrganizationsPathlessLayoutIdMembersIndexRoute
   '/(app)/organizations/_pathlessLayout/$id/settings/': typeof appOrganizationsPathlessLayoutIdSettingsIndexRoute
@@ -219,7 +286,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/onboarding'
-    | '/choose-provider'
     | '/forgot-password'
     | '/magic-link'
     | '/reset-password'
@@ -229,10 +295,17 @@ export interface FileRouteTypes {
     | '/verify-2fa'
     | '/verify-otp'
     | '/organizations'
+    | '/profile'
     | '/organizations/create'
     | '/api/auth/$'
     | '/organizations/'
     | '/organizations/$id'
+    | '/profile/active-sessions'
+    | '/profile/api-keys'
+    | '/profile/danger-zone'
+    | '/profile/personal-details'
+    | '/profile/providers'
+    | '/profile/security'
     | '/organizations/$id/dashboard'
     | '/organizations/$id/members'
     | '/organizations/$id/settings'
@@ -240,7 +313,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/onboarding'
-    | '/choose-provider'
     | '/forgot-password'
     | '/magic-link'
     | '/reset-password'
@@ -250,9 +322,16 @@ export interface FileRouteTypes {
     | '/verify-2fa'
     | '/verify-otp'
     | '/organizations'
+    | '/profile'
     | '/organizations/create'
     | '/api/auth/$'
     | '/organizations/$id'
+    | '/profile/active-sessions'
+    | '/profile/api-keys'
+    | '/profile/danger-zone'
+    | '/profile/personal-details'
+    | '/profile/providers'
+    | '/profile/security'
     | '/organizations/$id/dashboard'
     | '/organizations/$id/members'
     | '/organizations/$id/settings'
@@ -262,7 +341,6 @@ export interface FileRouteTypes {
     | '/(app)'
     | '/(auth)'
     | '/(app)/onboarding'
-    | '/(auth)/choose-provider'
     | '/(auth)/forgot-password'
     | '/(auth)/magic-link'
     | '/(auth)/reset-password'
@@ -273,10 +351,18 @@ export interface FileRouteTypes {
     | '/(auth)/verify-otp'
     | '/(app)/organizations'
     | '/(app)/organizations/_pathlessLayout'
+    | '/(app)/profile'
+    | '/(app)/profile/_pathlessLayout'
     | '/(app)/organizations/create'
     | '/api/auth/$'
     | '/(app)/organizations/'
     | '/(app)/organizations/_pathlessLayout/$id'
+    | '/(app)/profile/_pathlessLayout/active-sessions'
+    | '/(app)/profile/_pathlessLayout/api-keys'
+    | '/(app)/profile/_pathlessLayout/danger-zone'
+    | '/(app)/profile/_pathlessLayout/personal-details'
+    | '/(app)/profile/_pathlessLayout/providers'
+    | '/(app)/profile/_pathlessLayout/security'
     | '/(app)/organizations/_pathlessLayout/$id/dashboard'
     | '/(app)/organizations/_pathlessLayout/$id/members/'
     | '/(app)/organizations/_pathlessLayout/$id/settings/'
@@ -311,6 +397,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/(app)/profile': {
+      id: '/(app)/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof appProfileRouteImport
+      parentRoute: typeof appRouteRoute
     }
     '/(app)/organizations': {
       id: '/(app)/organizations'
@@ -375,13 +468,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authForgotPasswordRouteImport
       parentRoute: typeof authRouteRoute
     }
-    '/(auth)/choose-provider': {
-      id: '/(auth)/choose-provider'
-      path: '/choose-provider'
-      fullPath: '/choose-provider'
-      preLoaderRoute: typeof authChooseProviderRouteImport
-      parentRoute: typeof authRouteRoute
-    }
     '/(app)/onboarding': {
       id: '/(app)/onboarding'
       path: '/onboarding'
@@ -410,12 +496,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appOrganizationsCreateRouteImport
       parentRoute: typeof appOrganizationsRoute
     }
+    '/(app)/profile/_pathlessLayout': {
+      id: '/(app)/profile/_pathlessLayout'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof appProfilePathlessLayoutRouteRouteImport
+      parentRoute: typeof appProfileRoute
+    }
     '/(app)/organizations/_pathlessLayout': {
       id: '/(app)/organizations/_pathlessLayout'
       path: '/organizations'
       fullPath: '/organizations'
       preLoaderRoute: typeof appOrganizationsPathlessLayoutRouteRouteImport
       parentRoute: typeof appOrganizationsRoute
+    }
+    '/(app)/profile/_pathlessLayout/security': {
+      id: '/(app)/profile/_pathlessLayout/security'
+      path: '/security'
+      fullPath: '/profile/security'
+      preLoaderRoute: typeof appProfilePathlessLayoutSecurityRouteImport
+      parentRoute: typeof appProfilePathlessLayoutRouteRoute
+    }
+    '/(app)/profile/_pathlessLayout/providers': {
+      id: '/(app)/profile/_pathlessLayout/providers'
+      path: '/providers'
+      fullPath: '/profile/providers'
+      preLoaderRoute: typeof appProfilePathlessLayoutProvidersRouteImport
+      parentRoute: typeof appProfilePathlessLayoutRouteRoute
+    }
+    '/(app)/profile/_pathlessLayout/personal-details': {
+      id: '/(app)/profile/_pathlessLayout/personal-details'
+      path: '/personal-details'
+      fullPath: '/profile/personal-details'
+      preLoaderRoute: typeof appProfilePathlessLayoutPersonalDetailsRouteImport
+      parentRoute: typeof appProfilePathlessLayoutRouteRoute
+    }
+    '/(app)/profile/_pathlessLayout/danger-zone': {
+      id: '/(app)/profile/_pathlessLayout/danger-zone'
+      path: '/danger-zone'
+      fullPath: '/profile/danger-zone'
+      preLoaderRoute: typeof appProfilePathlessLayoutDangerZoneRouteImport
+      parentRoute: typeof appProfilePathlessLayoutRouteRoute
+    }
+    '/(app)/profile/_pathlessLayout/api-keys': {
+      id: '/(app)/profile/_pathlessLayout/api-keys'
+      path: '/api-keys'
+      fullPath: '/profile/api-keys'
+      preLoaderRoute: typeof appProfilePathlessLayoutApiKeysRouteImport
+      parentRoute: typeof appProfilePathlessLayoutRouteRoute
+    }
+    '/(app)/profile/_pathlessLayout/active-sessions': {
+      id: '/(app)/profile/_pathlessLayout/active-sessions'
+      path: '/active-sessions'
+      fullPath: '/profile/active-sessions'
+      preLoaderRoute: typeof appProfilePathlessLayoutActiveSessionsRouteImport
+      parentRoute: typeof appProfilePathlessLayoutRouteRoute
     }
     '/(app)/organizations/_pathlessLayout/$id': {
       id: '/(app)/organizations/_pathlessLayout/$id'
@@ -500,14 +635,58 @@ const appOrganizationsRouteChildren: appOrganizationsRouteChildren = {
 const appOrganizationsRouteWithChildren =
   appOrganizationsRoute._addFileChildren(appOrganizationsRouteChildren)
 
+interface appProfilePathlessLayoutRouteRouteChildren {
+  appProfilePathlessLayoutActiveSessionsRoute: typeof appProfilePathlessLayoutActiveSessionsRoute
+  appProfilePathlessLayoutApiKeysRoute: typeof appProfilePathlessLayoutApiKeysRoute
+  appProfilePathlessLayoutDangerZoneRoute: typeof appProfilePathlessLayoutDangerZoneRoute
+  appProfilePathlessLayoutPersonalDetailsRoute: typeof appProfilePathlessLayoutPersonalDetailsRoute
+  appProfilePathlessLayoutProvidersRoute: typeof appProfilePathlessLayoutProvidersRoute
+  appProfilePathlessLayoutSecurityRoute: typeof appProfilePathlessLayoutSecurityRoute
+}
+
+const appProfilePathlessLayoutRouteRouteChildren: appProfilePathlessLayoutRouteRouteChildren =
+  {
+    appProfilePathlessLayoutActiveSessionsRoute:
+      appProfilePathlessLayoutActiveSessionsRoute,
+    appProfilePathlessLayoutApiKeysRoute: appProfilePathlessLayoutApiKeysRoute,
+    appProfilePathlessLayoutDangerZoneRoute:
+      appProfilePathlessLayoutDangerZoneRoute,
+    appProfilePathlessLayoutPersonalDetailsRoute:
+      appProfilePathlessLayoutPersonalDetailsRoute,
+    appProfilePathlessLayoutProvidersRoute:
+      appProfilePathlessLayoutProvidersRoute,
+    appProfilePathlessLayoutSecurityRoute:
+      appProfilePathlessLayoutSecurityRoute,
+  }
+
+const appProfilePathlessLayoutRouteRouteWithChildren =
+  appProfilePathlessLayoutRouteRoute._addFileChildren(
+    appProfilePathlessLayoutRouteRouteChildren,
+  )
+
+interface appProfileRouteChildren {
+  appProfilePathlessLayoutRouteRoute: typeof appProfilePathlessLayoutRouteRouteWithChildren
+}
+
+const appProfileRouteChildren: appProfileRouteChildren = {
+  appProfilePathlessLayoutRouteRoute:
+    appProfilePathlessLayoutRouteRouteWithChildren,
+}
+
+const appProfileRouteWithChildren = appProfileRoute._addFileChildren(
+  appProfileRouteChildren,
+)
+
 interface appRouteRouteChildren {
   appOnboardingRoute: typeof appOnboardingRoute
   appOrganizationsRoute: typeof appOrganizationsRouteWithChildren
+  appProfileRoute: typeof appProfileRouteWithChildren
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
   appOnboardingRoute: appOnboardingRoute,
   appOrganizationsRoute: appOrganizationsRouteWithChildren,
+  appProfileRoute: appProfileRouteWithChildren,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
@@ -515,7 +694,6 @@ const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
 )
 
 interface authRouteRouteChildren {
-  authChooseProviderRoute: typeof authChooseProviderRoute
   authForgotPasswordRoute: typeof authForgotPasswordRoute
   authMagicLinkRoute: typeof authMagicLinkRoute
   authResetPasswordRoute: typeof authResetPasswordRoute
@@ -527,7 +705,6 @@ interface authRouteRouteChildren {
 }
 
 const authRouteRouteChildren: authRouteRouteChildren = {
-  authChooseProviderRoute: authChooseProviderRoute,
   authForgotPasswordRoute: authForgotPasswordRoute,
   authMagicLinkRoute: authMagicLinkRoute,
   authResetPasswordRoute: authResetPasswordRoute,

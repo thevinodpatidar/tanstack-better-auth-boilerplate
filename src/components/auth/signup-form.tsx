@@ -1,16 +1,13 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   appConfig,
@@ -19,7 +16,7 @@ import {
 } from "@/constants/config";
 import { authClient } from "@/lib/auth/auth-client";
 
-const passwordSignupSchema = z.object({
+const signupSchema = z.object({
   email: z.email({ message: "Invalid email address" }),
   password: z.string().min(MIN_PASSWORD_LENGTH, {
     message: "Password must be at least 8 characters",
@@ -27,93 +24,139 @@ const passwordSignupSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
 });
 
-type PasswordSignupUser = z.infer<typeof passwordSignupSchema>;
-
 export function SignupForm() {
-  const form = useForm<PasswordSignupUser>({
-    resolver: zodResolver(passwordSignupSchema),
+  const form = useForm({
     defaultValues: { email: "", password: "", name: "" },
-    mode: "onChange",
+    validators: {
+      onChange: signupSchema,
+      onSubmit: signupSchema,
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        await authClient.signUp.email(
+          {
+            email: value.email,
+            password: value.password,
+            name: value.name,
+            callbackURL: appConfig.authRoutes.onboarding,
+          },
+          {
+            onError: (ctx) => {
+              if (ctx.error.status === HTTP_STATUS_CODES.FORBIDDEN) {
+                toast.error("Please verify your email address");
+              }
+              toast.error(ctx.error.message);
+            },
+            onSuccess: () => {
+              toast.success("Verification email sent");
+            },
+          }
+        );
+      } catch {
+        toast.error("Error signing in");
+      } finally {
+        form.reset();
+      }
+    },
   });
 
-  const onSubmit = async (formData: PasswordSignupUser) => {
-    try {
-      await authClient.signUp.email(
-        {
-          email: formData.email,
-          password: formData.password,
-          name: formData.name,
-          callbackURL: appConfig.authRoutes.onboarding,
-        },
-        {
-          onError: (ctx) => {
-            if (ctx.error.status === HTTP_STATUS_CODES.FORBIDDEN) {
-              toast.error("Please verify your email address");
-            }
-            toast.error(ctx.error.message);
-          },
-          onSuccess: () => {
-            toast.success("Verification email sent");
-          },
-        }
-      );
-    } catch {
-      toast.error("Error signing in");
-    } finally {
-      form.reset();
-    }
-  };
-
   return (
-    <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          control={form.control}
+    <form
+      id="signup-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+    >
+      <FieldGroup className="gap-4">
+        <form.Field
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                <Input
+                  aria-invalid={isInvalid}
+                  id={field.name}
+                  name={field.name}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="John Doe"
+                  type="text"
+                  value={field.state.value}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
           name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="John Doe" type="text" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
         />
-        <FormField
-          control={form.control}
+        <form.Field
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                <Input
+                  aria-invalid={isInvalid}
+                  id={field.name}
+                  name={field.name}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="m@example.com"
+                  type="email"
+                  value={field.state.value}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
           name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="m@example.com" type="email" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
         />
-        <FormField
-          control={form.control}
+        <form.Field
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                <Input
+                  aria-invalid={isInvalid}
+                  id={field.name}
+                  name={field.name}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="********"
+                  type="password"
+                  value={field.state.value}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
           name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="********" type="password" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
         />
-        <Button
-          className="w-full"
-          loading={form.formState.isSubmitting}
-          type="submit"
+        <form.Subscribe
+          selector={(formState) => [
+            formState.canSubmit,
+            formState.isSubmitting,
+          ]}
         >
-          Create an account
-        </Button>
-      </form>
-    </Form>
+          {([canSubmit, isSubmitting]) => (
+            <Button
+              disabled={!canSubmit}
+              form="signup-form"
+              loading={isSubmitting}
+              size="sm"
+              type="submit"
+            >
+              Create account
+            </Button>
+          )}
+        </form.Subscribe>
+      </FieldGroup>
+    </form>
   );
 }

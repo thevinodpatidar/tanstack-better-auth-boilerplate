@@ -7,36 +7,6 @@ import { members, sessions } from "@/db/schema";
 import { auth } from "@/lib/auth/auth";
 import { authMiddleware } from "../auth/middleware";
 
-export const $checkUserOrganizations = createServerFn({
-  method: "GET",
-}).handler(async () => {
-  const organizationsData = await auth.api.listOrganizations({
-    headers: getRequest().headers,
-  });
-
-  if (organizationsData.length) {
-    await auth.api.setActiveOrganization({
-      headers: getRequest().headers,
-      body: {
-        organizationId: organizationsData[0].id,
-        organizationSlug: organizationsData[0].slug,
-      },
-    });
-
-    return {
-      organizationId: organizationsData[0].id,
-      organizationSlug: organizationsData[0].slug,
-      hasOrganizations: true,
-    };
-  }
-
-  return {
-    hasOrganizations: false,
-    organizationId: null,
-    organizationSlug: null,
-  };
-});
-
 export const $checkOrganizationWithId = createServerFn({
   method: "GET",
 })

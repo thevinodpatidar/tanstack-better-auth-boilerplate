@@ -14,10 +14,6 @@ export function SwitcherItem({ organization }: { organization: Organization }) {
   const activeOrganizationId = activeOrganization.data?.id;
   const navigate = useNavigate();
 
-  // const pathAfterSlug = pathname.split("/").slice(3).join("/");
-
-  // const setActiveOrganization = useAction(setActiveOrganizationAction);
-
   const { mutateAsync: setActiveOrganization, isPending } =
     setActiveOrganizationMutationOptions(organization.id, organization.slug);
 

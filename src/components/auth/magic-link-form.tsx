@@ -1,77 +1,99 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { appConfig } from "@/constants/config";
 import { authClient } from "@/lib/auth/auth-client";
 
 const magicLinkUserSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
+  email: z.email({ message: "Invalid email address" }),
 });
 
-type MagicLinkUser = z.infer<typeof magicLinkUserSchema>;
-
 export function MagicLinkForm() {
-  const form = useForm<MagicLinkUser>({
-    resolver: zodResolver(magicLinkUserSchema),
+
+  const form = useForm({
     defaultValues: { email: "" },
-    mode: "onChange",
+    validators: {
+      onChange: magicLinkUserSchema,
+      onSubmit: magicLinkUserSchema,
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        const { error } = await authClient.signIn.magicLink({
+          email: value.email,
+          callbackURL: appConfig.authRoutes.onboarding,
+        });
+        if (error) {
+          toast.error(error.message);
+        } else {
+          toast.success("Magic link sent to email");
+        }
+      } catch {
+        toast.error("Error signing in");
+      } finally {
+        form.reset();
+      }
+    },
   });
 
-  const onSubmit = async (formData: MagicLinkUser) => {
-    try {
-      const { error } = await authClient.signIn.magicLink({
-        email: formData.email,
-        callbackURL: appConfig.authRoutes.onboarding,
-      });
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success("Magic link sent to email");
-      }
-    } catch {
-      toast.error("Error signing in");
-    } finally {
-      form.reset();
-    }
-  };
-
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="m@example.com" type="email" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button
-            className="w-full"
-            loading={form.formState.isSubmitting}
-            type="submit"
-          >
-            Send Magic Link
-          </Button>
-        </div>
-      </form>
-    </Form>
+    <form
+      id="magic-link-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+    >
+      <FieldGroup className="gap-4">
+        <form.Field
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                <Input
+                  aria-invalid={isInvalid}
+                  id={field.name}
+                  name={field.name}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="m@example.com"
+                  type="email"
+                  value={field.state.value}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+          name="email"
+        />
+        <form.Subscribe
+          selector={(formState) => [
+            formState.canSubmit,
+            formState.isSubmitting,
+          ]}
+        >
+          {([canSubmit, isSubmitting]) => (
+            <Button
+              disabled={!canSubmit} 
+              form="magic-link-form"
+              loading={isSubmitting}
+              size="sm"
+              type="submit"
+            >
+              Send Magic Link
+            </Button>
+          )}
+        </form.Subscribe>
+      </FieldGroup>
+    </form>
   );
 }
