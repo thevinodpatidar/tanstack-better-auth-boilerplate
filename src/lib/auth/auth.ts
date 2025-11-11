@@ -249,6 +249,7 @@ const getAuthConfig = createServerOnlyFn(() => {
         rpID: env.PASSKEY_RP_ID,
         rpName: "TanStack Better Auth Boilerplate",
         origin: env.BETTER_AUTH_URL,
+        authenticatorSelection: { requireResidentKey: true },
       }),
       reactStartCookies(),
     ],
