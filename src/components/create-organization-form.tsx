@@ -3,7 +3,7 @@ import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
 import { generateId } from "better-auth";
 import { toast } from "sonner";
-import z from "zod/v3";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Field,

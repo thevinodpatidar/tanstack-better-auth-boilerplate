@@ -23,11 +23,8 @@ import { Switcher } from "./switcher";
 
 export function OrganizationDropdown() {
   const navigate = useNavigate();
-  const {
-    data: activeOrganization,
-    isPending,
-    isRefetching,
-  } = authClient.useActiveOrganization();
+  const { data: activeOrganization, isPending } =
+    authClient.useActiveOrganization();
 
   if (activeOrganization?.id === null) {
     navigate({ to: "/organizations" });
@@ -38,7 +35,7 @@ export function OrganizationDropdown() {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          {isPending || isRefetching ? (
+          {isPending ? (
             <Skeleton className="h-8 w-full" />
           ) : (
             <DropdownMenuTrigger asChild>

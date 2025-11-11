@@ -1,5 +1,5 @@
 import { IconFlowerFilled } from "@tabler/icons-react";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { CreateOrganizationForm } from "@/components/create-organization-form";
 import {
   Card,
@@ -21,26 +21,25 @@ export const Route = createFileRoute("/(app)/onboarding")({
       revalidateIfStale: true,
     });
 
-    if (userOrganizations.hasOrganizations) {
-      throw redirect({
-        to: "/organizations/$id/dashboard",
-        params: { id: userOrganizations.organizationId },
-      });
-    }
-
     return { userOrganizations };
   },
 });
 
 function RouteComponent() {
-
   const data = Route.useLoaderData();
-  console.log(data);
-  if (data.userOrganizations.hasOrganizations) {
+
+  if (data.userOrganizations?.hasOrganizations) {
     authClient.organization.setActive({
       organizationId: data.userOrganizations.organizationId,
       organizationSlug: data.userOrganizations.organizationSlug || "",
     });
+
+    return (
+      <Navigate
+        params={{ id: data.userOrganizations.organizationId }}
+        to="/organizations/$id/dashboard"
+      />
+    );
   }
 
   return (

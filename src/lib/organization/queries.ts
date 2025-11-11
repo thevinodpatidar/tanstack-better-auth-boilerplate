@@ -2,6 +2,9 @@ import { queryOptions } from "@tanstack/react-query";
 import {
   $checkOrganizationWithId,
   $checkUserOrganizations,
+  $getFullOrganization,
+  $getOrganizationInvitations,
+  $getOrganizationMembers,
   $listOrganizationsWithMemberCount,
 } from "./functions";
 
@@ -34,4 +37,39 @@ export const listOrganizationsWithMemberCountQueryOptions = () =>
 
 export type ListOrganizationsWithMemberCountQueryResult = Awaited<
   ReturnType<typeof $listOrganizationsWithMemberCount>
+>;
+
+export const getOrganizationMembersQueryOptions = (organizationId: string) =>
+  queryOptions({
+    queryKey: ["get-organization-members", organizationId],
+    queryFn: ({ signal }) =>
+      $getOrganizationMembers({ signal, data: { organizationId } }),
+  });
+
+export type GetOrganizationMembersQueryResult = Awaited<
+  ReturnType<typeof $getOrganizationMembers>
+>;
+
+export const getOrganizationInvitationsQueryOptions = (
+  organizationId: string
+) =>
+  queryOptions({
+    queryKey: ["get-organization-invitations", organizationId],
+    queryFn: ({ signal }) =>
+      $getOrganizationInvitations({ signal, data: { organizationId } }),
+  });
+
+export type GetOrganizationInvitationsQueryResult = Awaited<
+  ReturnType<typeof $getOrganizationInvitations>
+>;
+
+export const getFullOrganizationQueryOptions = (organizationId: string) =>
+  queryOptions({
+    queryKey: ["get-full-organization", organizationId],
+    queryFn: ({ signal }) =>
+      $getFullOrganization({ signal, data: { organizationId } }),
+  });
+
+export type GetFullOrganizationQueryResult = Awaited<
+  ReturnType<typeof $getFullOrganization>
 >;

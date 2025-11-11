@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { and, eq } from "drizzle-orm";
-import z from "zod/v3";
+import { z } from "zod";
 import { db } from "@/db";
 import { members, sessions } from "@/db/schema";
 import { auth } from "@/lib/auth/auth";
@@ -103,3 +103,44 @@ export const $setActiveOrganization = createServerFn({
         .where(eq(sessions.id, session.id));
     }
   );
+
+export const $getFullOrganization = createServerFn({
+  method: "GET",
+})
+  .middleware([authMiddleware])
+  .inputValidator(z.object({ organizationId: z.string() }))
+  .handler(async ({ data: { organizationId } }) => {
+    const organization = await auth.api.getFullOrganization({
+      query: { organizationId },
+      headers: getRequest().headers,
+    });
+    return organization;
+  });
+
+export const $getOrganizationMembers = createServerFn({
+  method: "GET",
+})
+  .middleware([authMiddleware])
+  .inputValidator(z.object({ organizationId: z.string() }))
+  .handler(async ({ data: { organizationId } }) => {
+    const membersData = await auth.api.listMembers({
+      query: { organizationId },
+      headers: getRequest().headers,
+    });
+
+    return membersData.members;
+  });
+
+export const $getOrganizationInvitations = createServerFn({
+  method: "GET",
+})
+  .middleware([authMiddleware])
+  .inputValidator(z.object({ organizationId: z.string() }))
+  .handler(async ({ data: { organizationId } }) => {
+    const invitations = await auth.api.listInvitations({
+      query: { organizationId },
+      headers: getRequest().headers,
+    });
+
+    return invitations;
+  });
