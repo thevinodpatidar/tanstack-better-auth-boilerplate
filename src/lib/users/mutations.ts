@@ -3,10 +3,7 @@ import { toast } from "sonner";
 import { authClient } from "../auth/auth-client";
 import { authQueryOptions } from "../auth/queries";
 import { $updatePassword } from "./functions";
-import {
-  listActiveSessionsQueryOptions,
-  listPasskeysQueryOptions,
-} from "./queries";
+import { listActiveSessionsQueryOptions } from "./queries";
 
 export const revokeSessionMutationOptions = () => {
   const queryClient = useQueryClient();
@@ -36,27 +33,6 @@ export const revokeOtherSessionsMutationOptions = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: listActiveSessionsQueryOptions().queryKey,
-      });
-    },
-    onError: (error: Error) => {
-      toast.error(error.message);
-    },
-  });
-};
-
-export const addPasskeyMutationOptions = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationKey: ["add-passkey"],
-    mutationFn: async ({ name }: { name: string }) => {
-      await authClient.passkey.addPasskey({
-        name,
-        authenticatorAttachment: "cross-platform",
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: listPasskeysQueryOptions().queryKey,
       });
     },
     onError: (error: Error) => {
