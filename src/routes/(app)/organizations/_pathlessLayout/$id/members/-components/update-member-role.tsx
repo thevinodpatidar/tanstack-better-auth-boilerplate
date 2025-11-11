@@ -46,9 +46,6 @@ export function UpdateMemberRoleDialog({
         role: z.enum(["owner", "admin", "member"]),
       }),
     },
-    onSubmit: (values) => {
-      console.log(values);
-    },
   });
 
   // useEffect(() => {
@@ -74,38 +71,6 @@ export function UpdateMemberRoleDialog({
             form.handleSubmit();
           }}
         >
-          {/* <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Select role</FormLabel>
-                  <Select
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a role" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="owner">Owner</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="member">Member</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              className="w-full"
-              loading={action.isExecuting}
-              type="submit"
-            >
-              Update Role
-            </Button> */}
           <FieldGroup>
             <form.Field
               children={(field) => {

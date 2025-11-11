@@ -1,5 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute } from "@tanstack/react-router";
+import { toast } from "sonner";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,8 +42,19 @@ function RouteComponent() {
     validators: {
       onSubmit: personalDetailsSchema,
     },
-    onSubmit: ({ value }) => {
-      console.log(value);
+    onSubmit: async ({ value }) => {
+      try {
+        const { error } = await authClient.updateUser({
+          name: value.name,
+        });
+        if (error) {
+          toast.error(error.message);
+        } else {
+          toast.success("Personal details updated successfully");
+        }
+      } catch {
+        toast.error("Failed to update personal details");
+      }
     },
   });
 

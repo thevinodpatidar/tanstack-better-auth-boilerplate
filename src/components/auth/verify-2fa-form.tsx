@@ -30,7 +30,6 @@ export function Verify2FaForm() {
       onSubmit: verify2FaUserSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
       try {
         const { data, error } = await authClient.twoFactor.verifyTotp({
           code: value.otp,
