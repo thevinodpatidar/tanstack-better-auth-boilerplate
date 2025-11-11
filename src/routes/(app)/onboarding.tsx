@@ -9,34 +9,28 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { authClient } from "@/lib/auth/auth-client";
-import { checkUserOrganizationsQueryOptions } from "@/lib/organization/queries";
+import { currentSessionQueryOptions } from "@/lib/users/queries";
 
 export const Route = createFileRoute("/(app)/onboarding")({
   component: RouteComponent,
   pendingComponent: OnboardingSkeleton,
   loader: async ({ context }) => {
-    const userOrganizations = await context.queryClient.ensureQueryData({
-      ...checkUserOrganizationsQueryOptions(),
+    const session = await context.queryClient.ensureQueryData({
+      ...currentSessionQueryOptions(),
       revalidateIfStale: true,
     });
 
-    return { userOrganizations };
+    return { session };
   },
 });
 
 function RouteComponent() {
   const data = Route.useLoaderData();
 
-  if (data.userOrganizations?.hasOrganizations) {
-    authClient.organization.setActive({
-      organizationId: data.userOrganizations.organizationId,
-      organizationSlug: data.userOrganizations.organizationSlug || "",
-    });
-
+  if (data.session?.activeOrganizationId) {
     return (
       <Navigate
-        params={{ id: data.userOrganizations.organizationId }}
+        params={{ id: data.session.activeOrganizationId }}
         to="/organizations/$id/dashboard"
       />
     );

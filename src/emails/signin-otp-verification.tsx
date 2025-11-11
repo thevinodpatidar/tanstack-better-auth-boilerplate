@@ -39,15 +39,13 @@ export const SigninOtpVerificationEmail = ({
               use the verification code below to confirm your email address.
             </Text>
           </Section>
-          <Section className="my-[32px] text-center">
-            <Container className="mx-auto inline-block rounded-[8px] bg-[#f4f4f4] px-[24px] py-[16px]">
-              <Text className="m-0 text-center font-bold text-[#333] text-[32px] tracking-[5px]">
-                {verificationCode}
-              </Text>
-            </Container>
+          <Section className="mx-0 my-[24px] rounded-[8px] bg-[#f4f7fa] p-[20px] text-center">
+            <Text className="m-0 font-bold text-[#333] text-[32px] tracking-[5px]">
+              {verificationCode}
+            </Text>
           </Section>
           <Section>
-            <Text className="text-[#333] text-[16px] leading-[24px]">
+            <Text className="m-0 text-[#555] text-[16px] leading-[24px]">
               This code will expire in {expiresIn} for security reasons. If you
               didn&apos;t request this verification, please ignore this email.
             </Text>

@@ -34,15 +34,13 @@ export const TwoFactorOtpEmail = ({
             code:
           </Text>
 
-          <Section className="my-[32px] text-center">
-            <Container className="inline-block rounded-[8px] border border-gray-200 bg-gray-50 px-[24px] py-[16px]">
-              <Text className="m-0 font-bold text-[32px] text-gray-800 tracking-[4px]">
-                {otpCode}
-              </Text>
-            </Container>
+          <Section className="mx-0 my-[24px] rounded-[8px] bg-[#f4f7fa] p-[20px] text-center">
+            <Text className="m-0 font-bold text-[#333] text-[32px] tracking-[5px]">
+              {otpCode}
+            </Text>
           </Section>
 
-          <Text className="mb-[12px] text-[16px] text-gray-600 leading-[24px]">
+          <Text className="m-0 text-[16px] text-gray-600 leading-[24px]">
             This code will expire in <strong>{expiresIn}</strong>. If you
             didn&apos;t request this code, you can safely ignore this email.
           </Text>

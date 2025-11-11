@@ -89,14 +89,9 @@ export function NavUser() {
             <DropdownMenuGroup>
               <DropdownMenuItem
                 className="w-full cursor-pointer"
-                // onClick={() =>
-                //   navigate({
-                //     to: "/organizations/$id/profile/personal-details",
-                //     params: { id: params.id },
-                //   })
-                //     `${appConfig.authRoutes.default}/${slug}/profile/personal-details`
-                //   )
-                // }
+                onClick={() =>
+                  router.navigate({ to: "/profile/personal-details" })
+                }
               >
                 <Settings className="size-4" />
                 <span className="text-sm">Profile Settings</span>

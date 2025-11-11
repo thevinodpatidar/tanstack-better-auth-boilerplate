@@ -1,5 +1,6 @@
-import { IconFlowerFilled } from "@tabler/icons-react";
-import { Link, parsePathname, useRouter } from "@tanstack/react-router";
+import { IconDialpadFilled, IconFlowerFilled } from "@tabler/icons-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Link2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,10 +11,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { appConfig } from "@/constants/config";
-import { ChooseProvider } from "./choose-provider";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { EmailOtpForm } from "./email-otp-form";
 import { ForgotPasswordForm } from "./forgot-password-form";
+import { GithubSignInButton } from "./github";
+import { GoogleSignInButton } from "./google";
 import { MagicLinkForm } from "./magic-link-form";
+import { PasskeySignInButton } from "./passkey";
 import { ResetPasswordForm } from "./reset-password-form";
 import { SigninForm } from "./signin-form";
 import { SignupForm } from "./signup-form";
@@ -30,7 +34,6 @@ type AuthWrapperProps = {
     | "forgot-password"
     | "reset-password"
     | "signin-otp"
-    | "choose-provider"
     | "verify-otp"
     | "verify-2fa";
 };
@@ -40,8 +43,7 @@ export default function AuthWrapper({
   description,
   view,
 }: Readonly<AuthWrapperProps>) {
-  const router = useRouter();
-  const pathname = parsePathname();
+  const navigate = useNavigate();
 
   const renderView = () => {
     switch (view) {
@@ -57,8 +59,6 @@ export default function AuthWrapper({
         return <ResetPasswordForm />;
       case "signin-otp":
         return <EmailOtpForm type="sign-in" />;
-      case "choose-provider":
-        return <ChooseProvider />;
       case "verify-otp":
         return <VerifyOtpForm />;
       case "verify-2fa":
@@ -68,15 +68,8 @@ export default function AuthWrapper({
     }
   };
 
-  const isChooseProvider = [
-    "/choose-provider",
-    "/verify-otp",
-    "/verify-2fa",
-  ].includes(pathname.join("/"));
-
   const renderBottomNavigation = () => {
     switch (view) {
-      case "choose-provider":
       case "forgot-password":
       case "reset-password":
       case "signin-otp":
@@ -128,7 +121,7 @@ export default function AuthWrapper({
         <div className="flex flex-col items-center gap-2 text-center">
           <IconFlowerFilled
             className="size-10 cursor-pointer"
-            onClick={() => router.navigate({ to: "/" })}
+            onClick={() => navigate({ to: "/" })}
           />
           <CardTitle className="font-semibold text-xl">{title}</CardTitle>
           <CardDescription className="text-muted-foreground text-sm">
@@ -138,30 +131,45 @@ export default function AuthWrapper({
       </CardHeader>
       <CardContent className="space-y-4">
         {renderView()}
-        {!isChooseProvider && (
-          <>
-            <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-border after:border-t">
-              <span className="relative z-10 bg-card px-2 text-muted-foreground">
-                Or continue with
-              </span>
-            </div>
-            <Button
-              className="w-full"
-              onClick={() =>
-                router.navigate({ to: appConfig.authRoutes.chooseProvider })
-              }
-              variant="secondary"
-            >
-              Choose provider
-            </Button>
-          </>
-        )}
+        <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-border after:border-t">
+          <span className="relative z-10 bg-card px-2 text-muted-foreground">
+            Or continue with
+          </span>
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                icon={<Link2Icon />}
+                onClick={() => navigate({ to: appConfig.authRoutes.magicLink })}
+                variant="secondary"
+              />
+            </TooltipTrigger>
+            <TooltipContent>Magic Link</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                icon={<IconDialpadFilled />}
+                onClick={() =>
+                  navigate({ to: appConfig.authRoutes.signinWithOtp })
+                }
+                variant="secondary"
+              />
+            </TooltipTrigger>
+            <TooltipContent>One-time password</TooltipContent>
+          </Tooltip>
+
+          <GoogleSignInButton />
+          <GithubSignInButton />
+          <PasskeySignInButton />
+        </div>
         {renderBottomNavigation()}
       </CardContent>
-      <CardFooter className="rounded-b-lg bg-muted p-4">
+      <CardFooter className="flex justify-center rounded-b-lg bg-muted p-4">
         <div className="flex flex-col gap-2">
           <div className="text-center text-muted-foreground text-xs">
-            By signing up, you agree to our{" "}
+            By signing up, you agree to our policy.{" "}
             {/* <Link to="/terms-of-use">Terms of Use</Link> and{" "}
             <Link to="/privacy-policy">Privacy Policy</Link>. */}
           </div>

@@ -1,43 +1,44 @@
 import { IconBrandGithub } from "@tabler/icons-react";
-import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { appConfig } from "@/constants/config";
 import { authClient } from "@/lib/auth/auth-client";
 
 export function GithubSignInButton() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSignIn = async () => {
-    setIsLoading(true);
-    try {
-      await authClient.signIn.social(
-        {
+  const { mutate: signInWithGithub, isPending: isSigningInWithGithub } =
+    useMutation({
+      mutationKey: ["github-sign-in"],
+      mutationFn: async () => {
+        await authClient.signIn.social({
           provider: "github",
           callbackURL: appConfig.authRoutes.onboarding,
-        },
-        {
-          onError: (ctx) => {
-            toast.error(ctx.error.message);
-          },
-        }
-      );
-    } catch {
-      toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        });
+      },
+      onSuccess: () => {
+        toast.success("Signed in with GitHub");
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
 
   return (
-    <Button
-      className="w-full"
-      icon={<IconBrandGithub />}
-      loading={isLoading}
-      onClick={handleSignIn}
-      variant="secondary"
-    >
-      Github
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          icon={<IconBrandGithub />}
+          loading={isSigningInWithGithub}
+          onClick={() => signInWithGithub()}
+          variant="secondary"
+        />
+      </TooltipTrigger>
+      <TooltipContent>GitHub</TooltipContent>
+    </Tooltip>
   );
 }

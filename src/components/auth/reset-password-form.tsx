@@ -1,17 +1,14 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { getRouteApi, useRouter } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
+import { useForm } from "@tanstack/react-form";
+import { getRouteApi } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { appConfig, MIN_PASSWORD_LENGTH } from "@/constants/config";
 import { authClient } from "@/lib/auth/auth-client";
@@ -22,71 +19,93 @@ const resetPasswordUserSchema = z.object({
   }),
 });
 
-type ResetPasswordUser = z.infer<typeof resetPasswordUserSchema>;
-
 export function ResetPasswordForm() {
   const route = getRouteApi("/(auth)/reset-password");
-
-  const router = useRouter();
   const searchParams = route.useSearch();
   const token = searchParams.token;
 
   if (!token) {
     toast.error("Invalid token");
-    router.navigate({ to: appConfig.authRoutes.signin });
+    window.location.href = appConfig.authRoutes.signin;
   }
 
-  const form = useForm<ResetPasswordUser>({
-    resolver: zodResolver(resetPasswordUserSchema),
+  const form = useForm({
     defaultValues: { password: "" },
-    mode: "onChange",
+    validators: {
+      onChange: resetPasswordUserSchema,
+      onSubmit: resetPasswordUserSchema,
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        const { error } = await authClient.resetPassword({
+          newPassword: value.password,
+          token: token as string,
+        });
+        if (error) {
+          toast.error(error.message);
+        } else {
+          toast.success("Password reset successfully");
+          window.location.href = appConfig.authRoutes.signin;
+        }
+      } catch {
+        toast.error("Error resetting password");
+      } finally {
+        form.reset();
+      }
+    },
   });
 
-  const onSubmit = async (formData: ResetPasswordUser) => {
-    try {
-      const { error } = await authClient.resetPassword({
-        newPassword: formData.password,
-        token: token as string,
-      });
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success("Password reset successfully");
-        router.navigate({ to: appConfig.authRoutes.signin });
-      }
-    } catch {
-      toast.error("Error resetting password");
-    } finally {
-      form.reset();
-    }
-  };
-
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>New Password</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="********" type="password" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button
-            className="w-full"
-            loading={form.formState.isSubmitting}
-            type="submit"
-          >
-            Reset password
-          </Button>
-        </div>
-      </form>
-    </Form>
+    <form
+      id="reset-password-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+    >
+      <FieldGroup className="gap-4">
+        <form.Field
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>New Password</FieldLabel>
+                <Input
+                  aria-invalid={isInvalid}
+                  id={field.name}
+                  name={field.name}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="********"
+                  type="password"
+                  value={field.state.value}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+          name="password"
+        />
+        <form.Subscribe
+          selector={(formState) => [
+            formState.canSubmit,
+            formState.isSubmitting,
+          ]}
+        >
+          {([canSubmit, isSubmitting]) => (
+            <Button
+              disabled={!canSubmit}
+              form="reset-password-form"
+              loading={isSubmitting}
+              size="sm"
+              type="submit"
+            >
+              Reset password
+            </Button>
+          )}
+        </form.Subscribe>
+      </FieldGroup>
+    </form>
   );
 }

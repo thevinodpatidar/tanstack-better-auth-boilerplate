@@ -22,6 +22,7 @@ import { ResetPasswordOtpEmail } from "@/emails/reset-password-otp";
 import { SigninOtpVerificationEmail } from "@/emails/signin-otp-verification";
 import { env } from "@/env/server";
 import { resend } from "../resend";
+import { $getUserDefaultOrganizationId } from "./functions";
 
 const getAuthConfig = createServerOnlyFn(() => {
   return betterAuth({
@@ -251,24 +252,23 @@ const getAuthConfig = createServerOnlyFn(() => {
       }),
       reactStartCookies(),
     ],
-    // databaseHooks: {
-    //   session: {
-    //     create: {
-    //       before: async (session) => {
-    //         const organizationId = await getUserDefaultOrganizationIdFn({
-    //           data: { userId: session.userId },
-    //         });
-    //         console.log("organizationId", organizationId);
-    //         return {
-    //           data: {
-    //             ...session,
-    //             activeOrganizationId: organizationId,
-    //           },
-    //         };
-    //       },
-    //     },
-    //   },
-    // },
+    databaseHooks: {
+      session: {
+        create: {
+          before: async (session) => {
+            const organizationId = await $getUserDefaultOrganizationId({
+              data: { userId: session.userId },
+            });
+            return {
+              data: {
+                ...session,
+                activeOrganizationId: organizationId,
+              },
+            };
+          },
+        },
+      },
+    },
   });
 });
 

@@ -1,19 +1,16 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { getRouteApi, Link, useRouter } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
+import { getRouteApi, Link } from "@tanstack/react-router";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   InputOTP,
@@ -22,93 +19,91 @@ import {
 } from "@/components/ui/input-otp";
 import { appConfig, MIN_PASSWORD_LENGTH, OTP_LENGTH } from "@/constants/config";
 import { authClient } from "@/lib/auth/auth-client";
-import { cn } from "@/lib/utils";
 import type { EmailOtpType } from "./email-otp-form";
 
 const verifyOtpUserSchema = z.object({
   otp: z.string().min(OTP_LENGTH, { message: "OTP must be 6 digits" }),
-  password: z
-    .string()
-    .min(MIN_PASSWORD_LENGTH, {
-      message: "Password must be at least 8 characters",
-    })
-    .optional(),
+  password: z.string().min(MIN_PASSWORD_LENGTH, {
+    message: "Password must be at least 8 characters",
+  }),
 });
-
-type VerifyOtpUser = z.infer<typeof verifyOtpUserSchema>;
 
 export function VerifyOtpForm() {
   const route = getRouteApi("/(auth)/verify-otp");
-  const router = useRouter();
   const searchParams = route.useSearch();
   const encodedEmail = searchParams.email;
   const email = encodedEmail ? decodeURIComponent(encodedEmail) : "";
   const type = searchParams.type as EmailOtpType;
 
-  const form = useForm<VerifyOtpUser>({
-    resolver: zodResolver(verifyOtpUserSchema),
-    defaultValues: { otp: "", password: undefined },
-    mode: "onChange",
-  });
-
-  const onSubmit = async (formData: VerifyOtpUser) => {
-    try {
-      if (type === "sign-in") {
-        await authClient.signIn.emailOtp(
-          {
-            otp: formData.otp,
-            email: email ?? "",
-          },
-          {
-            onError: (ctx) => {
-              toast.error(ctx.error.message);
+  const form = useForm({
+    defaultValues: { otp: "", password: "" },
+    validators: {
+      onChange: verifyOtpUserSchema,
+      onSubmit: verifyOtpUserSchema,
+    },
+    onSubmit: async ({
+      value,
+    }: {
+      value: { otp: string; password: string };
+    }) => {
+      try {
+        if (type === "sign-in") {
+          await authClient.signIn.emailOtp(
+            {
+              otp: value.otp,
+              email: email ?? "",
             },
-            onSuccess: () => {
-              router.navigate({ to: appConfig.authRoutes.onboarding });
-              toast.success("Signed in successfully");
+            {
+              onError: (ctx) => {
+                toast.error(ctx.error.message);
+              },
+              onSuccess: () => {
+                window.location.href = appConfig.authRoutes.onboarding;
+                toast.success("Signed in successfully");
+              },
+            }
+          );
+        } else if (type === "email-verification") {
+          await authClient.emailOtp.verifyEmail(
+            {
+              otp: value.otp,
+              email: email ?? "",
             },
-          }
-        );
-      } else if (type === "email-verification") {
-        await authClient.emailOtp.verifyEmail(
-          {
-            otp: formData.otp,
-            email: email ?? "",
-          },
-          {
-            onError: (ctx) => {
-              toast.error(ctx.error.message);
+            {
+              onError: (ctx) => {
+                toast.error(ctx.error.message);
+              },
+              onSuccess: () => {
+                window.location.href = appConfig.authRoutes.onboarding;
+                toast.success("Email verified successfully");
+              },
+            }
+          );
+        } else if (type === "forget-password") {
+          await authClient.emailOtp.resetPassword(
+            {
+              otp: value.otp,
+              email: email ?? "",
+              password: value.password,
             },
-            onSuccess: () => {
-              router.navigate({ to: appConfig.authRoutes.onboarding });
-              toast.success("Email verified successfully");
-            },
-          }
-        );
-      } else if (type === "forget-password") {
-        await authClient.emailOtp.resetPassword(
-          {
-            otp: formData.otp,
-            email: email ?? "",
-            password: formData.password ?? "",
-          },
-          {
-            onError: (ctx) => {
-              toast.error(ctx.error.message);
-            },
-            onSuccess: () => {
-              router.navigate({ to: appConfig.authRoutes.signin });
-              toast.success("Password reset successfully");
-            },
-          }
-        );
+            {
+              onError: (ctx) => {
+                toast.error(ctx.error.message);
+              },
+              onSuccess: () => {
+                window.location.href = appConfig.authRoutes.signin;
+                toast.success("Password reset successfully");
+              },
+            }
+          );
+        }
+      } catch {
+        toast.error("Error sending OTP");
+      } finally {
+        form.reset();
       }
-    } catch {
-      toast.error("Error sending OTP");
-    } finally {
-      form.reset();
-    }
-  };
+    },
+  });
 
   if (
     !(
@@ -133,71 +128,93 @@ export function VerifyOtpForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="space-y-4">
-          {type === "forget-password" && (
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
-          <FormField
-            control={form.control}
-            name="otp"
-            render={({ field }) => (
-              <FormItem
-                className={cn(
-                  type === "sign-in" && "flex flex-col items-center"
-                )}
-              >
-                {type !== "sign-in" && <FormLabel>OTP</FormLabel>}
-                <FormControl>
-                  <InputOTP
-                    maxLength={6}
-                    {...field}
-                    pattern={REGEXP_ONLY_DIGITS}
-                  >
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                  </InputOTP>
-                </FormControl>
-                <FormDescription
-                  className={cn(
-                    type === "sign-in" &&
-                      "text-center text-muted-foreground text-sm"
-                  )}
-                >
-                  Please enter the one-time password sent to your email.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
+    <form
+      id="verify-otp-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+    >
+      <FieldGroup className="gap-4">
+        {type === "forget-password" && (
+          <form.Field
+            children={(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                  <Input
+                    aria-invalid={isInvalid}
+                    id={field.name}
+                    name={field.name}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="********"
+                    type="password"
+                    value={field.state.value}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+            name="password"
           />
-          <Button
-            className="w-full"
-            loading={form.formState.isSubmitting}
-            type="submit"
-          >
-            Verify OTP
-          </Button>
-        </div>
-      </form>
-    </Form>
+        )}
+        <form.Field
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>OTP</FieldLabel>
+                <InputOTP
+                  aria-invalid={isInvalid}
+                  id={field.name}
+                  maxLength={6}
+                  name={field.name}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e)}
+                  pattern={REGEXP_ONLY_DIGITS}
+                >
+                  <InputOTPGroup>
+                    <InputOTPSlot index={0} />
+                    <InputOTPSlot index={1} />
+                    <InputOTPSlot index={2} />
+                    <InputOTPSlot index={3} />
+                    <InputOTPSlot index={4} />
+                    <InputOTPSlot index={5} />
+                  </InputOTPGroup>
+                </InputOTP>
+                <FieldDescription className="text-muted-foreground text-sm">
+                  Please enter the one-time password from your authenticator
+                  app.
+                </FieldDescription>
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+          name="otp"
+        />
+        <form.Subscribe
+          selector={(formState) => [
+            formState.canSubmit,
+            formState.isSubmitting,
+          ]}
+        >
+          {([canSubmit, isSubmitting]) => (
+            <Button
+              disabled={!canSubmit}
+              form="verify-otp-form"
+              loading={isSubmitting}
+              size="sm"
+              type="submit"
+            >
+              Verify OTP
+            </Button>
+          )}
+        </form.Subscribe>
+      </FieldGroup>
+    </form>
   );
 }

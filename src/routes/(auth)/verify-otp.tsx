@@ -3,7 +3,7 @@ import z from "zod";
 import AuthWrapper from "@/components/auth/auth-wrapper";
 
 const verifyOtpUserSchema = z.object({
-  email: z.email({ message: "Invalid email address" }),
+  email: z.string({ message: "Invalid email address" }),
   type: z
     .enum(["sign-in", "email-verification", "forget-password"])
     .catch("sign-in"),
