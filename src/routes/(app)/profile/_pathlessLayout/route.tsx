@@ -150,7 +150,17 @@ function RouteComponent() {
         <div className="flex flex-col gap-2 p-4 md:hidden">
           <DropdownMenu>
             <div className="flex flex-row items-center justify-between gap-2">
-              <Button onClick={() => window.history.back()} variant="outline">
+              <Button
+                onClick={() =>
+                  navigate({
+                    to: "/organizations/$id/dashboard",
+                    params: {
+                      id: sessionData?.session.activeOrganizationId ?? "",
+                    },
+                  })
+                }
+                variant="outline"
+              >
                 <ArrowLeftIcon className="size-4" />
                 Back
               </Button>
