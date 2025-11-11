@@ -100,13 +100,13 @@ function RouteComponent() {
   const { data: sessionData } = authClient.useSession();
   const pathname = routerState.location.pathname;
   const activeItem = profileSectionNav.find((item) => item.href === pathname);
-  
+
   return (
-    <SidebarProvider className="flex flex-col overflow-hidden p-4 md:flex-row">
+    <SidebarProvider className="flex flex-col overflow-hidden md:flex-row">
       <div className="flex flex-col gap-2 overflow-y-hidden">
-        <Sidebar className="hidden rounded-lg md:flex" collapsible="none">
+        <Sidebar className="hidden md:flex" collapsible="none">
           <SidebarHeader className="flex flex-row items-center gap-2">
-            <div className="font-bold">Settings</div>
+            <div className="ml-1 font-bold">Settings</div>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
@@ -147,10 +147,20 @@ function RouteComponent() {
             </Button>
           </SidebarFooter>
         </Sidebar>
-        <div className="flex flex-col gap-2 md:hidden">
+        <div className="flex flex-col gap-2 p-4 md:hidden">
           <DropdownMenu>
-            <div className="mb-4 flex flex-row items-center justify-between gap-2">
-              <Button onClick={() => window.history.back()} variant="outline">
+            <div className="flex flex-row items-center justify-between gap-2">
+              <Button
+                onClick={() =>
+                  navigate({
+                    to: "/organizations/$id/dashboard",
+                    params: {
+                      id: sessionData?.session.activeOrganizationId ?? "",
+                    },
+                  })
+                }
+                variant="outline"
+              >
                 <ArrowLeftIcon className="size-4" />
                 Back
               </Button>
@@ -175,7 +185,7 @@ function RouteComponent() {
           </DropdownMenu>
         </div>
       </div>
-      <main className="flex h-[calc(100vh-2rem)] flex-1 flex-col gap-4 overflow-y-auto px-0 md:px-4">
+      <main className="flex h-[calc(100vh-2rem)] flex-1 flex-col gap-4 overflow-y-auto p-4">
         <ScrollArea className="flex flex-1 flex-col gap-4">
           <Suspense
             fallback={
