@@ -45,8 +45,6 @@ export default function AddPasskeyDialog() {
         queryClient.invalidateQueries({
           queryKey: listPasskeysQueryOptions().queryKey,
         });
-        toast.success("Passkey added successfully");
-        setOpen(false);
       } catch {
         toast.error("Failed to add passkey");
       } finally {
