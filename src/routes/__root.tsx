@@ -1,4 +1,3 @@
-import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
@@ -6,7 +5,7 @@ import {
   Outlet,
   Scripts,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { DevTools } from "@/components/dev-tools";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { type AuthQueryResult, authQueryOptions } from "@/lib/auth/queries";
@@ -67,17 +66,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           {children}
           <Toaster richColors />
         </ThemeProvider>
-        <TanStackDevtools
-          config={{
-            position: "bottom-right",
-          }}
-          plugins={[
-            {
-              name: "Tanstack Router",
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-          ]}
-        />
+        <DevTools />
         <Scripts />
       </body>
     </html>

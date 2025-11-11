@@ -15,8 +15,8 @@ export const Route = createFileRoute("/(app)/organizations/_pathlessLayout")({
 function RouteComponent() {
   const [isSidebarOpen] = useState(() => {
     const storedState = Cookies.get(SIDEBAR_COOKIE_NAME);
-    if (storedState === "true") {
-      return true;
+    if (storedState === "false") {
+      return false;
     }
 
     return true; // Default to false if no cookie or invalid value

@@ -52,6 +52,8 @@
     "@tanstack/nitro-v2-vite-plugin": "^1.133.19",
     "@tanstack/react-devtools": "^0.7.0",
     "@tanstack/react-form": "^1.23.8",
+    "@tanstack/react-form-devtools": "^0.1.8",
+    "@tanstack/react-query-devtools": "^5.90.2",
     "@tanstack/react-router": "^1.132.0",
     "@tanstack/react-router-devtools": "^1.132.0",
     "@tanstack/react-router-ssr-query": "^1.134.12",
