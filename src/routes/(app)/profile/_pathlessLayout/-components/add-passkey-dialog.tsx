@@ -1,4 +1,5 @@
 import { useForm } from "@tanstack/react-form";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
@@ -18,7 +19,8 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { addPasskeyMutationOptions } from "@/lib/users/mutations";
+import { authClient } from "@/lib/auth/auth-client";
+import { listPasskeysQueryOptions } from "@/lib/users/queries";
 
 const addPasskeySchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -26,7 +28,7 @@ const addPasskeySchema = z.object({
 
 export default function AddPasskeyDialog() {
   const [open, setOpen] = useState(false);
-  const { mutateAsync } = addPasskeyMutationOptions();
+  const queryClient = useQueryClient();
 
   const form = useForm({
     defaultValues: { name: "" },
@@ -36,12 +38,19 @@ export default function AddPasskeyDialog() {
     },
     onSubmit: async ({ value }) => {
       try {
-        await mutateAsync({ name: value.name });
+        await authClient.passkey.addPasskey({
+          name: value.name,
+          authenticatorAttachment: "cross-platform",
+        });
+        queryClient.invalidateQueries({
+          queryKey: listPasskeysQueryOptions().queryKey,
+        });
+        toast.success("Passkey added successfully");
+        setOpen(false);
       } catch {
         toast.error("Failed to add passkey");
       } finally {
         form.reset();
-        setOpen(false);
       }
     },
   });
