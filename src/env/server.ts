@@ -11,6 +11,8 @@ export const env = createEnv({
     BETTER_AUTH_SECRET: z.string().min(1),
     BETTER_AUTH_EMAIL_FROM: z.string(),
 
+
+    PASSKEY_RP_ID: z.string(),
     RESEND_API_KEY: z.string().min(1),
 
     GITHUB_CLIENT_ID: z.string(),
