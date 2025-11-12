@@ -7,9 +7,10 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { OrganizationDropdown } from "../organization-switcher/organization-dropdown";
 import { NavPlatform } from "./nav-platform";
 import { NavSecondary } from "./nav-secondary";
+import { OrganizationSettings } from "./organization-settings";
+import { OrganizationSwitcher } from "./organization-switcher";
 import { SidebarCommand } from "./sidebar-command";
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar>;
@@ -18,11 +19,13 @@ export function AppSidebar({ ...props }: AppSidebarProps) {
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
-        <OrganizationDropdown />
+        <OrganizationSwitcher />
         <SidebarCommand />
-        <NavPlatform />
       </SidebarHeader>
-      <SidebarContent>{/* <NavWorkspaces /> */}</SidebarContent>
+      <SidebarContent>
+        <OrganizationSettings />
+        <NavPlatform />
+      </SidebarContent>
       <SidebarFooter>
         <NavSecondary />
         <NavUser />

@@ -2,7 +2,13 @@ import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Field,
   FieldError,
@@ -10,6 +16,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/auth/auth-client";
 
 const updateOrganizationNameSchema = z.object({
@@ -81,27 +88,33 @@ export function UpdateOrganizationName({ name }: { name: string }) {
               }}
               name="name"
             />
-            <form.Subscribe
-              selector={(formState) => [
-                formState.canSubmit,
-                formState.isSubmitting,
-              ]}
-            >
-              {([canSubmit, isSubmitting]) => (
-                <Button
-                  className="w-fit self-end"
-                  disabled={!canSubmit}
-                  form="update-organization-name-form"
-                  loading={isSubmitting}
-                  size="sm"
-                  type="submit"
-                >
-                  Update
-                </Button>
-              )}
-            </form.Subscribe>
           </FieldGroup>
         </CardContent>
+        <Separator />
+        <CardFooter className="flex flex-row justify-between gap-4">
+          <p className="text-muted-foreground text-sm">
+            This action will update the name of the organization.
+          </p>
+          <form.Subscribe
+            selector={(formState) => [
+              formState.canSubmit,
+              formState.isSubmitting,
+            ]}
+          >
+            {([canSubmit, isSubmitting]) => (
+              <Button
+                className="w-fit self-end"
+                disabled={!canSubmit}
+                form="update-organization-name-form"
+                loading={isSubmitting}
+                size="sm"
+                type="submit"
+              >
+                Update
+              </Button>
+            )}
+          </form.Subscribe>
+        </CardFooter>
       </Card>
     </form>
   );

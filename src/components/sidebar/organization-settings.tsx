@@ -1,5 +1,5 @@
 import { useNavigate, useRouterState } from "@tanstack/react-router";
-import { ChevronRight, CreditCard, type LucideIcon, User } from "lucide-react";
+import { ChevronRight, type LucideIcon, Settings, Users } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -26,24 +26,24 @@ const items: {
   items?: { title: string; url: string }[];
 }[] = [
   {
-    title: "Account",
-    url: "/settings/profile",
-    icon: User,
+    title: "Members",
+    url: "/organizations/$id/members",
+    icon: Users,
     isActive: true,
     isNested: false,
     items: [],
   },
   {
-    title: "Subscriptions",
-    url: "/settings/subscriptions",
-    icon: CreditCard,
+    title: "Settings",
+    url: "/organizations/$id/settings",
+    icon: Settings,
     isActive: false,
     isNested: false,
     items: [],
   },
 ];
 
-export function NavSettings() {
+export function OrganizationSettings() {
   const navigate = useNavigate();
   const routerState = useRouterState();
   const currentPathname = routerState.location.pathname;

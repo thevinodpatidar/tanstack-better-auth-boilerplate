@@ -16,7 +16,7 @@ function RouteComponent() {
       <div className="space-y-6">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <h1 className="font-semibold text-xl">Members</h1>
+            <h2 className="font-bold text-2xl">Members</h2>
             <p className="text-muted-foreground text-sm">
               Invite people and assign organization roles
             </p>

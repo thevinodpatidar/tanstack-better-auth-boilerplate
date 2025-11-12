@@ -15,14 +15,17 @@ export function SwitcherItem({ organization }: { organization: Organization }) {
   const navigate = useNavigate();
 
   const { mutateAsync: setActiveOrganization, isPending } =
-    setActiveOrganizationMutationOptions(organization.id, organization.slug);
+    setActiveOrganizationMutationOptions();
 
   const handleClick = async () => {
     if (activeOrganizationId === organization.id) {
       return;
     }
 
-    await setActiveOrganization();
+    await setActiveOrganization({
+      organizationId: organization.id,
+      organizationSlug: organization.slug,
+    });
 
     navigate({
       to: "/organizations/$id/dashboard",
@@ -42,7 +45,7 @@ export function SwitcherItem({ organization }: { organization: Organization }) {
       }}
     >
       <OrganizationAvatar
-        className="size-5"
+        className="size-6 shrink-0"
         orgId={organization.id}
         orgName={organization.name}
       />

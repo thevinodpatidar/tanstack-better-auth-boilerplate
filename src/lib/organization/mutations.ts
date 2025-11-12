@@ -5,14 +5,17 @@ import { authClient } from "../auth/auth-client";
 import { authQueryOptions } from "../auth/queries";
 import { getOrganizationInvitationsQueryOptions } from "./queries";
 
-export const setActiveOrganizationMutationOptions = (
-  organizationId: string,
-  organizationSlug: string
-) => {
+export const setActiveOrganizationMutationOptions = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ["set-active-organization", organizationId, organizationSlug],
-    mutationFn: () =>
+    mutationKey: ["set-active-organization"],
+    mutationFn: ({
+      organizationId,
+      organizationSlug,
+    }: {
+      organizationId: string;
+      organizationSlug: string;
+    }) =>
       authClient.organization.setActive({
         organizationId,
         organizationSlug,

@@ -36,7 +36,7 @@ export function CreateOrganizationModal() {
         </DialogHeader>
         <div className="border-none shadow-xs">
           <div className="space-y-6 p-0">
-            <CreateOrganizationForm />
+            <CreateOrganizationForm onSuccess={() => setOpen(false)} />
           </div>
         </div>
       </DialogContent>
