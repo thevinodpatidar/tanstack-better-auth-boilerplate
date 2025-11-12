@@ -36,7 +36,11 @@ const createOrganizationSchema = z.object({
     }),
 });
 
-export function CreateOrganizationForm() {
+export function CreateOrganizationForm({
+  onSuccess,
+}: {
+  onSuccess?: () => void;
+}) {
   const navigate = useNavigate();
 
   const form = useForm({
@@ -47,14 +51,20 @@ export function CreateOrganizationForm() {
     },
     onSubmit: async ({ value }) => {
       try {
-        const { error, data: organization } =
+        const { error, data: organizationData } =
           await authClient.organization.create(value);
+
         if (error) {
           toast.error(error.message || "Error creating organization");
         } else {
+          await authClient.organization.setActive({
+            organizationId: organizationData.id,
+            organizationSlug: organizationData.slug,
+          });
+          onSuccess?.();
           navigate({
             to: "/organizations/$id/dashboard",
-            params: { id: organization.id },
+            params: { id: organizationData.id },
           });
           toast.success("Organization created successfully");
         }

@@ -1,6 +1,8 @@
 import { getRouteApi, Link } from "@tanstack/react-router";
 import { Home } from "lucide-react";
 import {
+  SidebarGroup,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -49,17 +51,20 @@ export function NavPlatform() {
   ];
 
   return (
-    <SidebarMenu>
-      {items.map((item) => (
-        <SidebarMenuItem id={item.id} key={item.id}>
-          <SidebarMenuButton asChild isActive={item.isActive}>
-            <Link params={{ id }} to={item.url}>
-              <item.icon />
-              <span>{item.title}</span>
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      ))}
-    </SidebarMenu>
+    <SidebarGroup>
+      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarMenu>
+        {items.map((item) => (
+          <SidebarMenuItem id={item.id} key={item.id}>
+            <SidebarMenuButton asChild isActive={item.isActive}>
+              <Link params={{ id }} to={item.url}>
+                <item.icon />
+                <span>{item.title}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        ))}
+      </SidebarMenu>
+    </SidebarGroup>
   );
 }
